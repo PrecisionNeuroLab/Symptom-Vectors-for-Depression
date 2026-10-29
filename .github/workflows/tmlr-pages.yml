@@ -66,6 +66,12 @@ jobs:
             "${{ steps.pages.outputs.origin }}" "${{ steps.pages.outputs.base_path }}" > "$RUNNER_TEMP/pages.yml"
           bundle exec jekyll build --future --config "_config.yml,$RUNNER_TEMP/pages.yml"
 
+      - name: Build coauthor review page (figures and tables only)
+        working-directory: .
+        run: |
+          mkdir -p tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site/review
+          python make_review_page.py tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site/review/index.html
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site
