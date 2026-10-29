@@ -286,6 +286,32 @@ Every result below is reported for all ten models. The model-specific figures an
 })();
 </script>
 
+<script>
+// Size each figure iframe to its content: no inner scrollbar and no slack under the figure,
+// whatever the fonts or zoom. The height attributes stay as the size before the figure loads.
+(function () {
+  function fit(f) {
+    try {
+      var body = f.contentDocument && f.contentDocument.body;
+      if (!body || !body.offsetHeight) return;
+      var cs = f.contentWindow.getComputedStyle(body);
+      f.style.height = Math.ceil(body.offsetHeight + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom)) + 'px';
+    } catch (e) {}  // a cross-origin figure keeps its height attribute
+  }
+  function watch(f) {
+    fit(f);
+    try { new ResizeObserver(function () { fit(f); }).observe(f.contentDocument.body); } catch (e) {}
+  }
+  function init() {
+    document.querySelectorAll('iframe').forEach(function (f) {
+      f.addEventListener('load', function () { watch(f); });
+      watch(f);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
 ### Symptom groups are separable in all ten models
 
 We first asked whether depression-symptom categories are geometrically separable in language-model residual streams and, if so, at which layer separability is strongest. For every model, we computed the PERMANOVA pseudo-$F$ and its PERMDISP $p$-value at every hook point for the eight distance-metric × normalization combinations, and took each metric's gated peak, its maximum pseudo-$F$ within the eligible region (Figure 3; Table 3). In all ten models, every metric had an eligible layer, and every gated peak was significant (PERMANOVA $p \le 0.031$).
