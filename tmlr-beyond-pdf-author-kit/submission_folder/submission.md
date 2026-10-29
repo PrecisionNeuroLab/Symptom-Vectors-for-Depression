@@ -341,7 +341,7 @@ Neither the held-out Naturalistic nor the HappyDB corpus contributed to the cons
 The HappyDB entries that score highest are consistent across models: in every model the top-scoring entry describes a bodily or health event, "Their sore throat cleared up" in five models and "They are able to sleep longer than usual" in the other five. Positive in valence, these entries share the somatic vocabulary of the depressive corpora, which the Depression Vector partly carries.
 
 <figure id="fig-depvector" style="text-align: center; margin: 20px 0;">
-  <iframe src="{{ 'assets/html/submission/82.multimodel_auc.html' | relative_url }}" width="100%" height="1000" style="border: none;" title="Figure 6: Depression Score by corpus"></iframe>
+  <iframe src="{{ 'assets/html/submission/82.multimodel_auc.html' | relative_url }}" width="100%" height="1300" style="border: none;" title="Figure 6: Depression Score by corpus"></iframe>
   <figcaption style="text-align: left;"><b>Figure 6: A single operating-layer Depression Vector separates depressive from non-depressive text.</b> Cosine similarity between each excerpt's token-weighted centroid and the Depression Vector, by corpus. Core Clinical and Positive Affect are in-sample (both were used to construct the Depression Vector); Naturalistic and HappyDB are held out. Boxes show the median and interquartile range; points show individual excerpts (hover to read each one). Brackets report AUC for the in-sample and held-out contrasts; ***, <i>p</i> &lt; 0.001, one-sided Mann–Whitney U test. One panel per model, each at its own operating layer (Table 5); y-axes differ between panels because the score scale depends on the model family.</figcaption>
 </figure>
 
