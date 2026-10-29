@@ -1,0 +1,9 @@
+#!/bin/sh
+# Refuse to commit TMLR figures that embed text not already public in this repo.
+# Enable once per clone: git config core.hooksPath .githooks
+cd "$(git rev-parse --show-toplevel)" || exit 1
+for PY in python3 python; do
+    command -v "$PY" >/dev/null 2>&1 && exec "$PY" -I check_figure_text.py
+done
+echo "pre-commit: no python found, cannot check TMLR figures" >&2
+exit 1

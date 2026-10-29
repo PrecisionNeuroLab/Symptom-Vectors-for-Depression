@@ -31,6 +31,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      # Backstop for clones without the pre-commit hook: never deploy figures with non-public text.
+      - name: Check figure text is public
+        working-directory: .
+        run: python -I check_figure_text.py --all
+
       # Same merge step as compile_submission.py, minus the Docker server at the end.
       - name: Merge submission into site template
         run: |
