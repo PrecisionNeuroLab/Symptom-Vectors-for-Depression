@@ -56,7 +56,10 @@ jobs:
           JEKYLL_ENV: production
           PAGES_REPO_NWO: ${{ github.repository }}
           JEKYLL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bundle exec jekyll build --future --baseurl "${{ steps.pages.outputs.base_path }}"
+        run: |
+          printf 'url: "%s"\nbaseurl: "%s"\n' \
+            "${{ steps.pages.outputs.origin }}" "${{ steps.pages.outputs.base_path }}" > "$RUNNER_TEMP/pages.yml"
+          bundle exec jekyll build --future --config "_config.yml,$RUNNER_TEMP/pages.yml"
 
       - uses: actions/upload-pages-artifact@v3
         with:
