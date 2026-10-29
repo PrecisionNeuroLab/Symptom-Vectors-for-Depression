@@ -1,0 +1,71 @@
+name: Deploy TMLR paper to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tmlr-beyond-pdf-author-kit/**'
+      - '.github/workflows/tmlr-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: tmlr-beyond-pdf-author-kit
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Same merge step as compile_submission.py, minus the Docker server at the end.
+      - name: Merge submission into site template
+        run: |
+          mkdir -p tmlr_do_not_modify/_under_review
+          sed '/^start_jekyll_server()/d' compile_submission.py > "$RUNNER_TEMP/merge.py"
+          python "$RUNNER_TEMP/merge.py"
+
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+          working-directory: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build site
+        working-directory: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify
+        env:
+          JEKYLL_ENV: production
+        run: bundle exec jekyll build --future --baseurl "${{ steps.pages.outputs.base_path }}"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}under_review/submission/
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
