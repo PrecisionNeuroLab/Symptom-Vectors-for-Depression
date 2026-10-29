@@ -247,7 +247,8 @@ Every result below is reported for all ten models. The model-specific figures an
 // One floating model selector for every figure and table on the page. Each figure iframe
 // (figure_style.write_tmlr_dropdown_html) posts {type: 'tmlr-model-ready', labels} on load: the
 // first fills the selector, each is told the current model, and the selector shows (top right,
-// under the TMLR navbar) while any of them is on screen. Changing it sets every figure.
+// under the TMLR navbar, beside the figure column when there is room) while any of them is on
+// screen. Changing it sets every figure.
 (function () {
   var picker = document.getElementById('model-picker'), select = document.getElementById('model-select');
   document.body.appendChild(picker);  // fixed to the viewport, clear of any transformed ancestor
@@ -255,10 +256,17 @@ Every result below is reported for all ten models. The model-specific figures an
   function place() {
     var nav = document.getElementById('navbar');  // fixed-top or sticky-top in the TMLR layout
     picker.style.top = (nav ? Math.max(0, nav.getBoundingClientRect().bottom) : 0) + 12 + 'px';
-    picker.style.display = frames.some(function (f) {
+    var onScreen = frames.filter(function (f) {
       var r = f.getBoundingClientRect();
       return r.bottom > 0 && r.top < window.innerHeight;
-    }) ? 'block' : 'none';
+    });
+    picker.style.display = onScreen.length ? 'block' : 'none';
+    if (!onScreen.length) return;
+    // Beside the figure column when the margin has room for it, else at the window edge (phones).
+    var edge = Math.max.apply(null, onScreen.map(function (f) { return f.getBoundingClientRect().right; }));
+    var fits = edge + 16 + picker.offsetWidth <= window.innerWidth - 16;
+    picker.style.left = fits ? edge + 16 + 'px' : 'auto';
+    picker.style.right = fits ? 'auto' : '16px';
   }
   window.addEventListener('scroll', place, {passive: true});
   window.addEventListener('resize', place);
