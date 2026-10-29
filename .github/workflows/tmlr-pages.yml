@@ -54,6 +54,8 @@ jobs:
         working-directory: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify
         env:
           JEKYLL_ENV: production
+          PAGES_REPO_NWO: ${{ github.repository }}
+          JEKYLL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bundle exec jekyll build --future --baseurl "${{ steps.pages.outputs.base_path }}"
 
       - uses: actions/upload-pages-artifact@v3
