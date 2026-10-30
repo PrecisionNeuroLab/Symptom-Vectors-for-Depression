@@ -245,7 +245,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 <div class="model-views" style="overflow-x: auto;">
 <div data-model="Gemma-3-27B-PT">
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-27B-PT · L21</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">37</td><td style="text-align: center;">6.39<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.28<br><span style="color: #555;"><i>p</i> = 0.0518</span></td></tr>
@@ -261,7 +261,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="Gemma-3-27B-IT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-27B-IT · L21</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">21</td><td style="text-align: center;">6.37<br><span style="color: #555;"><i>p</i> = 0.0130</span></td><td style="text-align: center;">0.59<br><span style="color: #555;"><i>p</i> = 0.6232</span></td></tr>
@@ -277,7 +277,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="Gemma-3-12B-PT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-12B-PT · L13</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">13</td><td style="text-align: center;">5.91<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.63<br><span style="color: #555;"><i>p</i> = 0.1571</span></td></tr>
@@ -293,7 +293,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="Gemma-3-12B-IT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-12B-IT · L14</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">14</td><td style="text-align: center;">6.49<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.08<br><span style="color: #555;"><i>p</i> = 0.0567</span></td></tr>
@@ -309,7 +309,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="Gemma-3-4B-PT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-4B-PT · L20</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">17</td><td style="text-align: center;">5.81<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.25<br><span style="color: #555;"><i>p</i> = 0.0705</span></td></tr>
@@ -325,7 +325,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="Gemma-3-4B-IT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-4B-IT · L20</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">17</td><td style="text-align: center;">6.12<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.18<br><span style="color: #555;"><i>p</i> = 0.0734</span></td></tr>
@@ -341,7 +341,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="Mistral-24B-PT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Mistral-24B-PT · L8</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">8</td><td style="text-align: center;">5.84<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.85<br><span style="color: #555;"><i>p</i> = 0.0818</span></td></tr>
@@ -357,7 +357,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="Mistral-24B-IT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Mistral-24B-IT · L8</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">8</td><td style="text-align: center;">6.16<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.20<br><span style="color: #555;"><i>p</i> = 0.0693</span></td></tr>
@@ -373,7 +373,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="OLMo-2-32B-PT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: OLMo-2-32B-PT · L16</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">16</td><td style="text-align: center;">5.41<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.31<br><span style="color: #555;"><i>p</i> = 0.1153</span></td></tr>
@@ -389,7 +389,7 @@ To answer whether depression-symptom categories are geometrically separable in l
 </div>
 <div data-model="OLMo-2-32B-IT" hidden>
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: OLMo-2-32B-IT · L16</p>
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">16</td><td style="text-align: center;">5.46<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.34<br><span style="color: #555;"><i>p</i> = 0.1112</span></td></tr>
@@ -546,7 +546,7 @@ Table 4 collects the per-model results: the operating layer and how many metrics
 <figure id="tab-models" style="text-align: center; margin: 20px 0;">
   <p style="margin-bottom: 0.3em;"><b>Table 4:</b> Separability, symptom projection, and the Depression Vector in every model, each at its own operating layer. κ(G) is the condition number of the Symptom Vectors' Gram matrix. Clinician alignment and contrastive AUC are measured on held-out text.</p>
 <div style="overflow-x: auto;">
-<table>
+<table style="width: 100%;">
 <thead><tr><th style="text-align: left;">Model</th><th style="text-align: center;">Operating layer<br>layer / blocks · depth</th><th style="text-align: center;">Agreeing<br>metrics</th><th style="text-align: center;">Max gated<br>pseudo-<i>F</i></th><th style="text-align: center;">Clinician<br>alignment</th><th style="text-align: center;">Gram<br>κ(<i>G</i>)</th><th style="text-align: center;">Contrastive<br>AUC</th></tr></thead>
 <tbody>
 <tr><td style="text-align: left;">Gemma-3-27B-PT</td><td style="text-align: center;">21 / 62 · 34%</td><td style="text-align: center;">3 / 8</td><td style="text-align: center;">6.91</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">14,624.5</td><td style="text-align: center;">0.789</td></tr>
