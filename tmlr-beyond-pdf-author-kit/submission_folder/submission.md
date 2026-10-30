@@ -62,7 +62,7 @@ As shown in Figure 1, our analysis consists of four stages: (1) extracting resid
 
 <figure id="fig-pipeline" style="text-align: center; margin: 20px 0;">
   <img src="{{ 'assets/img/submission/1.pipeline.png' | relative_url }}" style="max-width: 100%; height: auto;" alt="Analysis pipeline diagram in four panels">
-  <figcaption style="text-align: left;"><b>Figure 1: Analysis pipeline</b>, applied to each model. <b>(a)</b> Residual stream activations are extracted at every layer for symptom descriptions from three groups. <b>(b)</b> Distance matrices are tested with PERMANOVA and PERMDISP at each layer to select the operating layer ℓ*. <b>(c)</b> Symptom Vectors are built from the group centroids at ℓ*, and naturalistic text is projected onto them to obtain coefficients β. <b>(d)</b> The Depression Vector is the difference between the Depression Centroid and the Positive Affect Centroid.</figcaption>
+  <figcaption style="text-align: left;"><b>Figure 1: Analysis pipeline</b>, applied to each model. <b>(a)</b> Residual stream activations are extracted at every layer for symptom descriptions from three groups. <b>(b)</b> Distance matrices are tested with PERMANOVA and PERMDISP at each layer to select the operating layer ℓ*. <b>(c)</b> Symptom Vectors are built from the group centroids at ℓ*, and naturalistic text is projected onto them to obtain coefficients β. <b>(d)</b> The Depression Vector is the difference between the Depression Centroid and the Positive Affect Centroid. Layer counts are shown for Gemma-3-27B; the other models have 34–64 blocks.</figcaption>
 </figure>
 
 ### Text corpora
