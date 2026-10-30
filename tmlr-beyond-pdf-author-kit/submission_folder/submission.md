@@ -122,7 +122,13 @@ Each excerpt was tokenized with the model's own tokenizer and processed in a sin
 (function () {
   var picker = document.getElementById('model-picker'), select = document.getElementById('model-select');
   document.body.appendChild(picker);  // fixed to the viewport, clear of any transformed ancestor
-  var frames = [];
+  // Inline per-model tables (.model-views) follow the selector too: one [data-model] child shows.
+  var frames = Array.prototype.slice.call(document.querySelectorAll('.model-views'));
+  function showInline(model) {
+    document.querySelectorAll('.model-views [data-model]').forEach(function (v) {
+      v.hidden = v.getAttribute('data-model') !== model;
+    });
+  }
   function place() {
     var nav = document.getElementById('navbar');  // fixed-top or sticky-top in the TMLR layout
     picker.style.top = (nav ? Math.max(0, nav.getBoundingClientRect().bottom) : 0) + 12 + 'px';
@@ -130,7 +136,7 @@ Each excerpt was tokenized with the model's own tokenizer and processed in a sin
       var r = f.getBoundingClientRect();
       return r.bottom > 0 && r.top < window.innerHeight;
     });
-    picker.style.display = onScreen.length ? 'block' : 'none';
+    picker.style.display = onScreen.length && select.options.length ? 'block' : 'none';
     if (!onScreen.length) return;
     // Beside the figure column when the margin has room for it, else at the window edge (phones).
     var edge = Math.max.apply(null, onScreen.map(function (f) { return f.getBoundingClientRect().right; }));
@@ -151,6 +157,7 @@ Each excerpt was tokenized with the model's own tokenizer and processed in a sin
     tell(e.source);
   });
   select.addEventListener('change', function () {
+    showInline(select.value);
     document.querySelectorAll('iframe').forEach(function (f) { tell(f.contentWindow); });
   });
 })();
@@ -235,7 +242,168 @@ To answer whether depression-symptom categories are geometrically separable in l
 
 <figure id="tab-permanova" style="text-align: center; margin: 20px 0;">
   <p style="margin-bottom: 0.3em;"><b>Table 3:</b> PERMANOVA and PERMDISP statistics at each metric's gated peak, with <i>p</i>-values beneath each statistic.</p>
-  <iframe src="{{ 'assets/html/submission/82.multimodel_table_permanova.html' | relative_url }}" width="100%" height="508" style="border: none;" title="Table 3: PERMANOVA and PERMDISP at each metric's operating peak"></iframe>
+<div class="model-views" style="overflow-x: auto;">
+<div data-model="Gemma-3-27B-PT">
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-27B-PT · L21</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">37</td><td style="text-align: center;">6.39<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.28<br><span style="color: #555;"><i>p</i> = 0.0518</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">40</td><td style="text-align: center;">6.37<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.76<br><span style="color: #555;"><i>p</i> = 0.0843</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">21</td><td style="text-align: center;">6.91<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">1.24<br><span style="color: #555;"><i>p</i> = 0.4319</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">35</td><td style="text-align: center;">3.66<br><span style="color: #555;"><i>p</i> = 0.0004</span></td><td style="text-align: center;">3.83<br><span style="color: #555;"><i>p</i> = 0.1095</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">21</td><td style="text-align: center;">2.83<br><span style="color: #555;"><i>p</i> = 0.0002</span></td><td style="text-align: center;">1.20<br><span style="color: #555;"><i>p</i> = 0.4698</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">35</td><td style="text-align: center;">2.47<br><span style="color: #555;"><i>p</i> = 0.0021</span></td><td style="text-align: center;">2.92<br><span style="color: #555;"><i>p</i> = 0.1867</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">21</td><td style="text-align: center;">6.48<br><span style="color: #555;"><i>p</i> = 0.0028</span></td><td style="text-align: center;">0.68<br><span style="color: #555;"><i>p</i> = 0.6419</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">35</td><td style="text-align: center;">5.77<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.58<br><span style="color: #555;"><i>p</i> = 0.0579</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="Gemma-3-27B-IT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-27B-IT · L21</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">21</td><td style="text-align: center;">6.37<br><span style="color: #555;"><i>p</i> = 0.0130</span></td><td style="text-align: center;">0.59<br><span style="color: #555;"><i>p</i> = 0.6232</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">21</td><td style="text-align: center;">5.04<br><span style="color: #555;"><i>p</i> = 0.0313</span></td><td style="text-align: center;">0.61<br><span style="color: #555;"><i>p</i> = 0.6157</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">26</td><td style="text-align: center;">8.93<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">1.54<br><span style="color: #555;"><i>p</i> = 0.2785</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">21</td><td style="text-align: center;">4.16<br><span style="color: #555;"><i>p</i> = 0.0023</span></td><td style="text-align: center;">1.43<br><span style="color: #555;"><i>p</i> = 0.3669</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">31</td><td style="text-align: center;">3.17<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.78<br><span style="color: #555;"><i>p</i> = 0.0536</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">21</td><td style="text-align: center;">2.51<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.53<br><span style="color: #555;"><i>p</i> = 0.0717</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">31</td><td style="text-align: center;">9.77<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.07<br><span style="color: #555;"><i>p</i> = 0.1536</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">21</td><td style="text-align: center;">6.23<br><span style="color: #555;"><i>p</i> = 0.0017</span></td><td style="text-align: center;">0.77<br><span style="color: #555;"><i>p</i> = 0.5648</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="Gemma-3-12B-PT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-12B-PT · L13</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">13</td><td style="text-align: center;">5.91<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.63<br><span style="color: #555;"><i>p</i> = 0.1571</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">13</td><td style="text-align: center;">5.60<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.37<br><span style="color: #555;"><i>p</i> = 0.2047</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">16</td><td style="text-align: center;">3.73<br><span style="color: #555;"><i>p</i> = 0.0063</span></td><td style="text-align: center;">1.19<br><span style="color: #555;"><i>p</i> = 0.3793</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">13</td><td style="text-align: center;">3.77<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.41<br><span style="color: #555;"><i>p</i> = 0.1105</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">21</td><td style="text-align: center;">2.43<br><span style="color: #555;"><i>p</i> = 0.0185</span></td><td style="text-align: center;">0.38<br><span style="color: #555;"><i>p</i> = 0.7998</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">37</td><td style="text-align: center;">2.48<br><span style="color: #555;"><i>p</i> = 0.0003</span></td><td style="text-align: center;">4.16<br><span style="color: #555;"><i>p</i> = 0.0811</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">47</td><td style="text-align: center;">5.43<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">1.92<br><span style="color: #555;"><i>p</i> = 0.2039</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">27</td><td style="text-align: center;">4.65<br><span style="color: #555;"><i>p</i> = 0.0003</span></td><td style="text-align: center;">3.37<br><span style="color: #555;"><i>p</i> = 0.1486</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="Gemma-3-12B-IT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-12B-IT · L14</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">14</td><td style="text-align: center;">6.49<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.08<br><span style="color: #555;"><i>p</i> = 0.0567</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">35</td><td style="text-align: center;">6.52<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.31<br><span style="color: #555;"><i>p</i> = 0.0602</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">14</td><td style="text-align: center;">8.03<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">1.42<br><span style="color: #555;"><i>p</i> = 0.2850</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">30</td><td style="text-align: center;">3.92<br><span style="color: #555;"><i>p</i> = 0.0002</span></td><td style="text-align: center;">3.95<br><span style="color: #555;"><i>p</i> = 0.1005</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">21</td><td style="text-align: center;">3.26<br><span style="color: #555;"><i>p</i> = 0.0014</span></td><td style="text-align: center;">0.01<br><span style="color: #555;"><i>p</i> = 0.9965</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">35</td><td style="text-align: center;">2.55<br><span style="color: #555;"><i>p</i> = 0.0002</span></td><td style="text-align: center;">3.83<br><span style="color: #555;"><i>p</i> = 0.1091</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">19</td><td style="text-align: center;">9.58<br><span style="color: #555;"><i>p</i> = 0.0002</span></td><td style="text-align: center;">1.72<br><span style="color: #555;"><i>p</i> = 0.2243</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">13</td><td style="text-align: center;">4.93<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.22<br><span style="color: #555;"><i>p</i> = 0.0960</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="Gemma-3-4B-PT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-4B-PT · L20</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">17</td><td style="text-align: center;">5.81<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.25<br><span style="color: #555;"><i>p</i> = 0.0705</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">23</td><td style="text-align: center;">6.65<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.24<br><span style="color: #555;"><i>p</i> = 0.1368</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">9</td><td style="text-align: center;">4.78<br><span style="color: #555;"><i>p</i> = 0.0011</span></td><td style="text-align: center;">0.26<br><span style="color: #555;"><i>p</i> = 0.8307</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">20</td><td style="text-align: center;">3.83<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.45<br><span style="color: #555;"><i>p</i> = 0.1328</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">18</td><td style="text-align: center;">2.52<br><span style="color: #555;"><i>p</i> = 0.0016</span></td><td style="text-align: center;">2.12<br><span style="color: #555;"><i>p</i> = 0.2330</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">24</td><td style="text-align: center;">2.57<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">5.91<br><span style="color: #555;"><i>p</i> = 0.0555</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">20</td><td style="text-align: center;">6.55<br><span style="color: #555;"><i>p</i> = 0.0008</span></td><td style="text-align: center;">0.67<br><span style="color: #555;"><i>p</i> = 0.5486</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">20</td><td style="text-align: center;">5.87<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.66<br><span style="color: #555;"><i>p</i> = 0.0935</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="Gemma-3-4B-IT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-4B-IT · L20</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">17</td><td style="text-align: center;">6.12<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.18<br><span style="color: #555;"><i>p</i> = 0.0734</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">23</td><td style="text-align: center;">6.83<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.82<br><span style="color: #555;"><i>p</i> = 0.1610</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">20</td><td style="text-align: center;">5.59<br><span style="color: #555;"><i>p</i> = 0.0008</span></td><td style="text-align: center;">0.46<br><span style="color: #555;"><i>p</i> = 0.6553</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">20</td><td style="text-align: center;">3.57<br><span style="color: #555;"><i>p</i> = 0.0011</span></td><td style="text-align: center;">2.40<br><span style="color: #555;"><i>p</i> = 0.2450</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">18</td><td style="text-align: center;">2.87<br><span style="color: #555;"><i>p</i> = 0.0008</span></td><td style="text-align: center;">0.86<br><span style="color: #555;"><i>p</i> = 0.5358</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">34</td><td style="text-align: center;">2.74<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.19<br><span style="color: #555;"><i>p</i> = 0.1201</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">20</td><td style="text-align: center;">8.45<br><span style="color: #555;"><i>p</i> = 0.0002</span></td><td style="text-align: center;">0.15<br><span style="color: #555;"><i>p</i> = 0.8790</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">20</td><td style="text-align: center;">5.89<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.57<br><span style="color: #555;"><i>p</i> = 0.1048</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="Mistral-24B-PT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Mistral-24B-PT · L8</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">8</td><td style="text-align: center;">5.84<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.85<br><span style="color: #555;"><i>p</i> = 0.0818</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">8</td><td style="text-align: center;">5.80<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.48<br><span style="color: #555;"><i>p</i> = 0.0974</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">8</td><td style="text-align: center;">3.49<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.38<br><span style="color: #555;"><i>p</i> = 0.1106</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">8</td><td style="text-align: center;">3.50<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.58<br><span style="color: #555;"><i>p</i> = 0.0963</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">13</td><td style="text-align: center;">2.34<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">7.54<br><span style="color: #555;"><i>p</i> = 0.0514</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">8</td><td style="text-align: center;">2.26<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">10.65<br><span style="color: #555;"><i>p</i> = 0.1052</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">11</td><td style="text-align: center;">5.60<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.83<br><span style="color: #555;"><i>p</i> = 0.0666</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">11</td><td style="text-align: center;">5.76<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.91<br><span style="color: #555;"><i>p</i> = 0.0571</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="Mistral-24B-IT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Mistral-24B-IT · L8</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">8</td><td style="text-align: center;">6.16<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.20<br><span style="color: #555;"><i>p</i> = 0.0693</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">8</td><td style="text-align: center;">6.09<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.74<br><span style="color: #555;"><i>p</i> = 0.0839</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">8</td><td style="text-align: center;">3.67<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.46<br><span style="color: #555;"><i>p</i> = 0.1037</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">8</td><td style="text-align: center;">3.67<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.81<br><span style="color: #555;"><i>p</i> = 0.0825</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">12</td><td style="text-align: center;">2.47<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">7.07<br><span style="color: #555;"><i>p</i> = 0.0539</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">8</td><td style="text-align: center;">2.30<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">10.82<br><span style="color: #555;"><i>p</i> = 0.0974</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">11</td><td style="text-align: center;">5.89<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.15<br><span style="color: #555;"><i>p</i> = 0.0555</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">13</td><td style="text-align: center;">5.90<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.16<br><span style="color: #555;"><i>p</i> = 0.0513</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="OLMo-2-32B-PT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: OLMo-2-32B-PT · L16</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">16</td><td style="text-align: center;">5.41<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.31<br><span style="color: #555;"><i>p</i> = 0.1153</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">16</td><td style="text-align: center;">5.23<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.05<br><span style="color: #555;"><i>p</i> = 0.1391</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">15</td><td style="text-align: center;">3.25<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.99<br><span style="color: #555;"><i>p</i> = 0.0631</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">15</td><td style="text-align: center;">3.19<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.61<br><span style="color: #555;"><i>p</i> = 0.1763</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">24</td><td style="text-align: center;">1.98<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">8.98<br><span style="color: #555;"><i>p</i> = 0.1007</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">16</td><td style="text-align: center;">2.08<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">13.59<br><span style="color: #555;"><i>p</i> = 0.0813</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">26</td><td style="text-align: center;">4.36<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.57<br><span style="color: #555;"><i>p</i> = 0.0812</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">42</td><td style="text-align: center;">5.03<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.31<br><span style="color: #555;"><i>p</i> = 0.0545</span></td></tr>
+</tbody>
+</table>
+</div>
+<div data-model="OLMo-2-32B-IT" hidden>
+<p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: OLMo-2-32B-IT · L16</p>
+<table>
+<thead><tr><th style="text-align: left;">Metric</th><th style="text-align: center;">Layer</th><th style="text-align: center;">PERMANOVA<br>pseudo-<i>F</i></th><th style="text-align: center;">PERMDISP<br><i>F</i></th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">raw</span></td><td style="text-align: center;">16</td><td style="text-align: center;">5.46<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.34<br><span style="color: #555;"><i>p</i> = 0.1112</span></td></tr>
+<tr><td style="text-align: left;">Centroid Cosine<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">16</td><td style="text-align: center;">5.29<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.98<br><span style="color: #555;"><i>p</i> = 0.1459</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">raw</span></td><td style="text-align: center;">16</td><td style="text-align: center;">3.23<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.90<br><span style="color: #555;"><i>p</i> = 0.1365</span></td></tr>
+<tr><td style="text-align: left;">Centroid Euclidean<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">15</td><td style="text-align: center;">3.23<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">2.78<br><span style="color: #555;"><i>p</i> = 0.1593</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">raw</span></td><td style="text-align: center;">24</td><td style="text-align: center;">2.00<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">8.86<br><span style="color: #555;"><i>p</i> = 0.0967</span></td></tr>
+<tr><td style="text-align: left;">Earth Mover&#x27;s<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">15</td><td style="text-align: center;">2.12<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">15.63<br><span style="color: #555;"><i>p</i> = 0.0569</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">raw</span></td><td style="text-align: center;">26</td><td style="text-align: center;">4.46<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">4.28<br><span style="color: #555;"><i>p</i> = 0.0504</span></td></tr>
+<tr><td style="text-align: left;">Energy<br><span style="color: #555;">unit-normalized</span></td><td style="text-align: center;">64</td><td style="text-align: center;">5.59<br><span style="color: #555;"><i>p</i> &lt; 0.0001</span></td><td style="text-align: center;">3.96<br><span style="color: #555;"><i>p</i> = 0.0660</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
 </figure>
 
 The gated peaks clustered at an early operating layer in most models: at 20–34% of depth in eight of the ten (Mistral-Small-24B, layer 8 of 40 for both PT and IT; OLMo-2-32B, 16 of 64 for both; Gemma-3-12B, 13 of 48 for PT and 14 of 48 for IT; Gemma-3-27B, 21 of 62 for both). The Gemma-3-4B pair was the exception, at layer 20 of 34 (59%) for both PT and IT. Between two and five of the eight metrics' gated peaks coincided at the operating layer (five for Gemma-3-27B-IT and both Mistral models; four for Gemma-3-4B-IT; three for Gemma-3-27B-PT, Gemma-3-12B-PT, Gemma-3-4B-PT, and both OLMo-2 models; two for Gemma-3-12B-IT), and the highest gated pseudo-$F$ there ranged from 5.41 to 8.45 (Table 4).
@@ -373,11 +541,27 @@ Two features of the score distributions are worth noting. First, the four corpor
 
 ## Summary across models
 
-Table 4 collects the per-model results: the operating layer and how many metrics agree on it, the strength of separation there, clinician agreement on the held-out corpus, the condition number of the symptom basis, and the held-out Depression Vector AUC. Every model separates the symptom groups, agrees with clinician annotation on all three axes of held-out text, and supports a Depression Vector well above chance.
+Table 4 collects the per-model results: the operating layer and how many metrics agree on it, the strength of separation there, clinician agreement on the held-out corpus, the condition number of the symptom basis, and the held-out Depression Vector AUC. Every model separates the symptom groups, agrees with clinician annotation on all three axes of held-out text, and supports a Depression Vector well above chance. Within Gemma-3, the one family tested at several sizes, scale brought no consistent gain: the 4B models matched the 12B and 27B models on clinician alignment and separation strength, and the held-out AUC was lowest at 27B.
 
 <figure id="tab-models" style="text-align: center; margin: 20px 0;">
   <p style="margin-bottom: 0.3em;"><b>Table 4:</b> Separability, symptom projection, and the Depression Vector in every model, each at its own operating layer. κ(G) is the condition number of the Symptom Vectors' Gram matrix. Clinician alignment and contrastive AUC are measured on held-out text.</p>
-  <iframe src="{{ 'assets/html/submission/82.multimodel_comparison_table.html' | relative_url }}" width="100%" height="410" style="border: none;" title="Table 4: separability, projection, and Depression Vector in every model"></iframe>
+<div style="overflow-x: auto;">
+<table>
+<thead><tr><th style="text-align: left;">Model</th><th style="text-align: center;">Operating layer<br>layer / blocks · depth</th><th style="text-align: center;">Agreeing<br>metrics</th><th style="text-align: center;">Max gated<br>pseudo-<i>F</i></th><th style="text-align: center;">Clinician<br>alignment</th><th style="text-align: center;">Gram<br>κ(<i>G</i>)</th><th style="text-align: center;">Contrastive<br>AUC</th></tr></thead>
+<tbody>
+<tr><td style="text-align: left;">Gemma-3-27B-PT</td><td style="text-align: center;">21 / 62 · 34%</td><td style="text-align: center;">3 / 8</td><td style="text-align: center;">6.91</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">14,624.5</td><td style="text-align: center;">0.789</td></tr>
+<tr><td style="text-align: left;">Gemma-3-27B-IT</td><td style="text-align: center;">21 / 62 · 34%</td><td style="text-align: center;">5 / 8</td><td style="text-align: center;">8.40</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">12,484.7</td><td style="text-align: center;">0.730</td></tr>
+<tr><td style="text-align: left;">Gemma-3-12B-PT</td><td style="text-align: center;">13 / 48 · 27%</td><td style="text-align: center;">3 / 8</td><td style="text-align: center;">5.91</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">8,959.2</td><td style="text-align: center;">0.959</td></tr>
+<tr><td style="text-align: left;">Gemma-3-12B-IT</td><td style="text-align: center;">14 / 48 · 29%</td><td style="text-align: center;">2 / 8</td><td style="text-align: center;">8.03</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">18,143.6</td><td style="text-align: center;">0.965</td></tr>
+<tr><td style="text-align: left;">Gemma-3-4B-PT</td><td style="text-align: center;">20 / 34 · 59%</td><td style="text-align: center;">3 / 8</td><td style="text-align: center;">6.55</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">12,491.7</td><td style="text-align: center;">0.945</td></tr>
+<tr><td style="text-align: left;">Gemma-3-4B-IT</td><td style="text-align: center;">20 / 34 · 59%</td><td style="text-align: center;">4 / 8</td><td style="text-align: center;">8.45</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">11,619.5</td><td style="text-align: center;">0.953</td></tr>
+<tr><td style="text-align: left;">Mistral-24B-PT</td><td style="text-align: center;">8 / 40 · 20%</td><td style="text-align: center;">5 / 8</td><td style="text-align: center;">5.84</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">35.5</td><td style="text-align: center;">0.943</td></tr>
+<tr><td style="text-align: left;">Mistral-24B-IT</td><td style="text-align: center;">8 / 40 · 20%</td><td style="text-align: center;">5 / 8</td><td style="text-align: center;">6.16</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">37.1</td><td style="text-align: center;">0.946</td></tr>
+<tr><td style="text-align: left;">OLMo-2-32B-PT</td><td style="text-align: center;">16 / 64 · 25%</td><td style="text-align: center;">3 / 8</td><td style="text-align: center;">5.41</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">33.5</td><td style="text-align: center;">0.945</td></tr>
+<tr><td style="text-align: left;">OLMo-2-32B-IT</td><td style="text-align: center;">16 / 64 · 25%</td><td style="text-align: center;">3 / 8</td><td style="text-align: center;">5.46</td><td style="text-align: center;">3 / 3</td><td style="text-align: center;">33.9</td><td style="text-align: center;">0.946</td></tr>
+</tbody>
+</table>
+</div>
 </figure>
 
 ### Pre-trained versus instruction-tuned models
@@ -400,7 +584,7 @@ The Gram-pseudoinverse decorrelation turns overlapping clinical categories into 
 
 ## Limitations
 
-Several limitations must be addressed prior to clinical application. First, we collapsed the nine DSM-5 symptoms into three groups for statistical power, which limits the symptom specificity of our analysis. Second, although every analysis was repeated in ten models, they span only three families and 4–32 billion parameters, all evaluated on the same English corpora; whether the results extend to other architectures, larger scales, and other languages is untested. Third, preprocessing is a potential confound: every passage was rewritten into third-person prose by another large language model. Although the edits were minimal, reviewed by psychiatrist authors, and designed to preserve clinical content, this step may introduce bias. Fourth, and most importantly, agreement with clinician annotation is not equivalent to clinical validity: nothing reported here has been validated against diagnostic outcomes, treatment response, or longitudinal trajectories, and the method should not be construed as a clinical instrument.
+Several limitations must be addressed prior to clinical application. First, we collapsed the nine DSM-5 symptoms into three groups for statistical power, which limits the symptom specificity of our analysis. Second, although every analysis was repeated in ten models, they span only three families and 4–32 billion parameters, with only Gemma-3 tested at more than one size, all evaluated on the same English corpora; whether the results extend to other architectures, larger scales, and other languages is untested. Third, preprocessing is a potential confound: every passage was rewritten into third-person prose by another large language model. Although the edits were minimal, reviewed by psychiatrist authors, and designed to preserve clinical content, this step may introduce bias. Fourth, and most importantly, agreement with clinician annotation is not equivalent to clinical validity: nothing reported here has been validated against diagnostic outcomes, treatment response, or longitudinal trajectories, and the method should not be construed as a clinical instrument.
 
 ## Conclusion
 
