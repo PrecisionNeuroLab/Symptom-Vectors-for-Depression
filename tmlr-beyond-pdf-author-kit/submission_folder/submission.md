@@ -414,47 +414,25 @@ The centroid metrics peaked at the operating layer more often than Earth Mover's
 
 ### Method
 
-The procedure below adapts the semantic projection framework of Grand et al. <d-cite key="grand2022semantic"></d-cite>, who showed that context-dependent human judgments about object features can be recovered from word embeddings by projecting word vectors onto interpretable axes: the line connecting "small" to "big," for instance, yields an axis along which a word's projection reflects perceived size. We extend this framework in three ways. First, symptom axes are constructed from class-centroid activations rather than antonymous word pairs, because clinical symptom categories (mood, somatic, suicidality) lack the natural antonymy of adjective pairs. Second, the three symptom axes are projected jointly rather than independently, with the resulting values decorrelated via a Gram-inverse correction. Third, the representations being projected are residual stream activations of a contemporary transformer language model, taken at the operating layer and in the raw activation geometry identified in the previous experiment, whereas the original framework used static distributional word vectors.
+We adapt the semantic projection framework of Grand et al. <d-cite key="grand2022semantic"></d-cite>, who recovered human judgments of object features by projecting word vectors onto interpretable axes; for example, the line from "small" to "big" tracks perceived size. We make three changes. The axes are class centroids rather than antonym pairs, because symptom categories have no natural antonyms. The three axes are projected jointly and decorrelated with a Gram-inverse correction. And the projected representations are residual stream activations at the operating layer rather than static word vectors.
 
-The output of the procedure is, for each input passage $x$, a three-dimensional vector of decorrelated projection coefficients,
-
-$$
-\beta(x) = (\beta_{\text{mood}}, \beta_{\text{somatic}}, \beta_{\text{suicidality}}) \in \mathbb{R}^3,
-$$
-
-each coefficient quantifying the unique contribution of one symptom axis to the passage's representation in residual stream space at the operating layer. We refer to the subspace of residual stream space spanned by the three symptom basis vectors as the *symptom subspace*. The construction of the basis, the projection, and the properties of $\beta$ are described in turn below.
-
-**Symptom Vector construction.** At the operating layer $\ell^\ast$ identified by the separability analysis, we constructed three Symptom Vectors $v_s \in \mathbb{R}^{d}$, where $d$ is the model's residual stream width, for $s \in \lbrace \text{mood}, \text{somatic}, \text{suicidality} \rbrace$ from the Core Clinical corpus. Each $v_s$ is the centroid of all residual stream activations associated with symptom $s$, computed in the model's native activation geometry. As throughout, the initial `<bos>` token is removed before averaging, to prevent attention-sink effects <d-cite key="xiao2024attentionsinks,sun2024massive"></d-cite>, and all centroid arithmetic is performed in float64 on CPU. The three centroids were stacked to form the basis matrix:
+**Symptom Vectors.** At the operating layer $\ell^\ast$, each Symptom Vector $v_s \in \mathbb{R}^{d}$, for $s \in \lbrace \text{mood}, \text{somatic}, \text{suicidality} \rbrace$, is the centroid of all Core Clinical activations for symptom $s$. Stacking them gives the basis
 
 $$
-V = [\, v_{\text{mood}};\ v_{\text{somatic}};\ v_{\text{suicidality}} \,] \in \mathbb{R}^{3 \times d}.
+V = [\, v_{\text{mood}};\ v_{\text{somatic}};\ v_{\text{suicidality}} \,] \in \mathbb{R}^{3 \times d},
 $$
 
-**Gram matrix.** Depression symptoms are textually comorbid: a passage describing one symptom often touches on others, so the three Symptom Vectors overlap, and a plain projection would count their shared signal on every axis. We correct for this with the inverse of the Gram matrix
+whose span we call the *symptom subspace*.
+
+**Projection.** Depression symptoms co-occur in text, so the Symptom Vectors overlap, and a plain projection would count their shared signal on every axis. We correct for this with the Gram matrix $G = V V^\top$. For a passage $x$ with operating-layer centroid $c(x)$, the coefficients are
 
 $$
-G = V V^\top \in \mathbb{R}^{3 \times 3},
+\beta(x) = G^{-1} V \, c(x) = (\beta_{\text{mood}}, \beta_{\text{somatic}}, \beta_{\text{suicidality}}).
 $$
 
-whose entries $G_{ij} = v_i \cdot v_j$ are the pairwise inner products of the Symptom Vectors. Its condition number $\kappa(G) = \lambda_{\max} / \lambda_{\min}$ measures how collinear the Symptom Vectors are; it grows as they approach parallel. $\kappa(G)$ is reported for each model in the Results.
+When the basis is orthonormal, $G^{-1} = I$ and this reduces to Grand et al.'s independent projection onto each axis. When the axes overlap, the Gram inverse isolates each axis's own contribution. A positive $\beta_s$ means the passage points along $v_s$, and a negative one means it points against it. Because $V$ is fixed, coefficients from different passages and corpora share one coordinate system. The condition number $\kappa(G) = \lambda_{\max} / \lambda_{\min}$ measures how collinear the Symptom Vectors are; we report it for each model in the Results.
 
-**Symptom projection.** Finally, we reduce each excerpt from a residual stream of $d$ dimensions × excerpt length to 3 symptom coefficients. The decorrelated projection coefficients for a passage $x$ are:
-
-$$
-\beta(x) = G^{-1} V \, c(x),
-$$
-
-where $c(x)$ is the passage's centroid representation: we extracted the operating-layer residual stream activations for $x$ and computed the float64 centroid of the remaining tokens, using the identical procedure as for the symptom basis vectors.
-
-This formulation is the multi-axis analogue of the projection step in Grand et al. <d-cite key="grand2022semantic"></d-cite>: when the basis is orthonormal, $G^{-1} = I$ and $\beta$ reduces to an inner-product projection onto each axis independently. Class-centroid bases over overlapping categories are correlated. The Gram inverse extends the projection to such bases: each coefficient measures one axis's unique contribution after accounting for the others. Equivalently, $\beta(x)$ holds the least-squares coefficients of $c(x)$ regressed on the three Symptom Vectors, $c(x) \approx \beta_{\text{mood}} v_{\text{mood}} + \beta_{\text{somatic}} v_{\text{somatic}} + \beta_{\text{suicidality}} v_{\text{suicidality}}$, so each coefficient reads like a regression coefficient with the other two symptoms held fixed.
-
-The resulting projection coefficients $\beta$ have three interpretable properties:
-
-- **Per-symptom isolation.** Each $\beta_s$ reflects the unique contribution of $v_s$ alone, with the shared signal among correlated axes apportioned by the Gram correction.
-- **Sign.** The sign of $\beta_s$ indicates whether the passage points along $v_s$ (positive) or against it (negative).
-- **Cross-passage comparability.** Because $\beta$ is derived from a fixed basis $V$ and a uniform projection procedure, projection coefficients from different excerpts and corpora live in the same coordinate system, enabling direct cross-corpus comparison, e.g., comparing $\beta_{\text{suicidality}}$ between clinical instrument and naturalistic depression descriptions.
-
-We projected each passage's centroid from the Core Clinical and Naturalistic corpora onto $V$ using this procedure. Core Clinical projections constitute an in-sample consistency check; only the Naturalistic projections evaluate whether the methodology generalizes to held-out text as external validation. Each passage thus received three decorrelated projection coefficients $(\beta_{\text{mood}}, \beta_{\text{somatic}}, \beta_{\text{suicidality}})$, interpreted in the Results. Group differences on each axis were tested with Dunn's post-hoc test, Benjamini–Hochberg corrected within each corpus.
+**Evaluation.** We projected every Core Clinical and Naturalistic passage. The Core Clinical projections are an in-sample consistency check, and the held-out Naturalistic projections test generalization. Group differences on each axis were tested with Dunn's post-hoc test, Benjamini–Hochberg corrected within each corpus.
 
 ### Results
 
