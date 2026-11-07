@@ -72,6 +72,16 @@ jobs:
           mkdir -p tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site/review
           python make_review_page.py tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site/review/index.html
 
+      # The OpenReview upload: built from this exact commit, only after the site built cleanly.
+      - name: Zip submission folder
+        run: zip -r submission_folder.zip submission_folder -x '*.DS_Store' '*/.ipynb_checkpoints/*'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: submission_folder-${{ github.sha }}
+          path: tmlr-beyond-pdf-author-kit/submission_folder.zip
+          retention-days: 90
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site
