@@ -31,6 +31,19 @@ jobs:
         with:
           python-version: '3.12'
 
+      # The online-editor import (compile_submission.py, submission_folder/, tmlr_do_not_modify/).
+      # Built first, while tmlr_do_not_modify/ is still pristine: later steps add _under_review/,
+      # merged assets, vendor/ and _site/ there.
+      - name: Zip editor import
+        working-directory: .
+        run: python -I make_tmlr_zip.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tmlr-editor-import-${{ github.sha }}
+          path: tmlr-submission.zip
+          retention-days: 90
+
       # Backstop for clones without the pre-commit hook: never deploy figures with non-public text.
       - name: Check figure text is public
         working-directory: .
