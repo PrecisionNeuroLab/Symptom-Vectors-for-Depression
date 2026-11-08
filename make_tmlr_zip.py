@@ -19,7 +19,10 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 KIT = os.path.join(ROOT, 'tmlr-beyond-pdf-author-kit')
 ZIP = os.path.join(ROOT, 'tmlr-submission.zip')
 PARTS = ['compile_submission.py', 'submission_folder', 'tmlr_do_not_modify']
-SKIP = {'.DS_Store', 'Thumbs.db', 'desktop.ini', '__pycache__', '.ipynb_checkpoints'}
+SKIP = {'.DS_Store', 'Thumbs.db', 'desktop.ini', '__pycache__', '.ipynb_checkpoints',
+        # Jekyll build output, never part of the kit: the merged copy compile_submission.py writes
+        # (inline math already converted to $$) would shadow submission_folder/submission.md.
+        '_under_review', '_site', '.jekyll-cache', '.sass-cache', 'vendor', '.bundle'}
 
 
 def submission_files():
