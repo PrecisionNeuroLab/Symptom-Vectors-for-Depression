@@ -31,8 +31,8 @@ toc:
   - name: Broader Impact Statement
   - name: Reproducibility Statement
   - name: GenAI Usage Disclosure
-  - name: Appendix A Core Clinical symptom descriptions
-  - name: Appendix B Within-source clinician agreement
+  - name: Appendix A Within-source clinician agreement
+  - name: Appendix B Core Clinical symptom descriptions
   - name: Appendix C PERMANOVA and PERMDISP statistics at the gated peaks
 ---
 
@@ -92,7 +92,7 @@ A pilot experiment on the unedited Core Clinical corpus showed that PROCEED's re
 
 These rewrites were deliberately minimal, comprising surface-level edits only: standardizing pronouns, removing severity ratings from clinical questionnaires, correcting grammar in ReDSM5 and HappyDB, and restructuring fragments into continuous prose in PROCEED. Names and identifying details were also removed. Clinical content was left unchanged.
 
-The full set of rewritten excerpts in the Core Clinical corpus is provided in Appendix A. Table 2 shows representative examples of the rewriting from each corpus except ReDSM5, whose license prohibits reproducing posts.
+The full set of rewritten excerpts in the Core Clinical corpus is provided in Appendix B. Table 2 shows representative examples of the rewriting from each corpus except ReDSM5, whose license prohibits reproducing posts.
 
 <p style="text-align: center; margin-bottom: 0.3em;"><b>Table 2:</b> Text standardization examples. Original and standardized excerpts from each corpus except ReDSM5.</p>
 
@@ -283,7 +283,7 @@ Figure 3 shows the coefficient distributions for each clinician-annotation group
 
 The projection agreed with the clinician annotations in every model. On the in-sample Core Clinical corpus, from which the Symptom Vectors were built, the excerpts carrying the matching annotation attained the highest median coefficient on each of the three axes in all ten models, an internal consistency check that Symptom Vectors separate the categories they were built from (Figure 3(a)–(c)).
 
-The same rank ordering was preserved on the held-out Naturalistic corpus, the true test of generalization: in all ten models, the matching annotation group again ranked first on every axis (Figure 3(d)). In both corpora and every model, each matching group exceeded each of the other two groups on its own axis (all corrected $p < 0.05$). On the held-out corpus, the matching group's median led the next-highest group's by 0.46–0.73 on the mood axis, 0.31–0.43 on the somatic axis, and 0.33–0.54 on the suicidality axis across models. Projecting held-out naturalistic narratives onto Symptom Vectors constructed from clinical instruments yields coefficients that agree with clinician annotation, in every model. Appendix B repeats this analysis within each Naturalistic source.
+The same rank ordering was preserved on the held-out Naturalistic corpus, the true test of generalization: in all ten models, the matching annotation group again ranked first on every axis (Figure 3(d)). In both corpora and every model, each matching group exceeded each of the other two groups on its own axis (all corrected $p < 0.05$). On the held-out corpus, the matching group's median led the next-highest group's by 0.46–0.73 on the mood axis, 0.31–0.43 on the somatic axis, and 0.33–0.54 on the suicidality axis across models. Projecting held-out naturalistic narratives onto Symptom Vectors constructed from clinical instruments yields coefficients that agree with clinician annotation, in every model. Appendix A repeats this analysis within each Naturalistic source.
 
 <figure id="fig-coefficients" style="text-align: center; margin: 20px 0;">
   <iframe src="{{ 'assets/html/submission/82.multimodel_coefficient_abc.html' | relative_url }}" width="100%" height="608" style="border: none;" title="Figure 3(a)–(c): per-axis coefficient distributions"></iframe>
@@ -405,7 +405,11 @@ All analyses were performed in Python, and code to reproduce every figure and ta
 
 Anthropic Claude Opus 4 has been used to pre-process text samples. Figure 1 was created with Claude Design. Generative AI tools were employed for coding assistance. All AI-written code has been reviewed, tested, and verified by the authors. During the preparation of this manuscript, generative AI tools were employed for editing purposes, including proofreading, grammar correction, vocabulary improvement, and overall language polishing.
 
-## Appendix A Core Clinical symptom descriptions
+## Appendix A Within-source clinician agreement
+
+Because ReDSM5 supplies most somatic and suicidality excerpts but no mood excerpts (Table 1), symptom group and source are associated in the Naturalistic corpus, so we repeated the analysis within each source. On the book-sourced excerpts alone ($n = 229$), each group had the highest median coefficient on its own axis in all ten models, as it did on the *Handbook* excerpts alone ($n = 172$); on *Darkness Visible* alone ($n = 57$), the ordering held in every model except Gemma-3-27B-PT, where only one of the three groups ranked first on its own axis. Within ReDSM5 ($n = 194$), somatic excerpts scored above suicidality excerpts on the somatic axis (AUC 0.809–0.957), and suicidality excerpts above somatic excerpts on the suicidality axis (AUC 0.733–0.994; one-sided Mann–Whitney $U$, all $p < 10^{-7}$), in every model. The two Gemma-3-27B models had the lowest suicidality-axis AUCs (0.737 pre-trained, 0.733 instruction-tuned), against 0.986–0.994 in the other eight. Source shifts the level of the coefficients (ReDSM5 suicidality excerpts scored higher on the suicidality axis than book-sourced ones in every model), while the ordering held within each source in every model except Gemma-3-27B-PT on *Darkness Visible*.
+
+## Appendix B Core Clinical symptom descriptions
 
 Natural-language descriptions of depression symptoms, organized by clinical assessment instrument and grouped into three symptom dimensions (mood, somatic, and suicidality). Each entry corresponds to an item or item cluster from the source instrument.
 
@@ -507,10 +511,6 @@ Natural-language descriptions of depression symptoms, organized by clinical asse
 - **Item 4. Energy.** They feel that everything requires effort. They feel physically weak. They have low energy. They feel fatigued or tired.
 
 **Suicidality.** **Autoaggression symptoms.** The individual experiences thoughts related to their desire to continue living. They report suicidal ideation and engage in self-harming behaviors. They have attempted suicide.
-
-## Appendix B Within-source clinician agreement
-
-Because ReDSM5 supplies most somatic and suicidality excerpts but no mood excerpts (Table 1), symptom group and source are associated in the Naturalistic corpus, so we repeated the analysis within each source. On the book-sourced excerpts alone ($n = 229$), each group had the highest median coefficient on its own axis in all ten models, as it did on the *Handbook* excerpts alone ($n = 172$); on *Darkness Visible* alone ($n = 57$), the ordering held in nine of the ten. Within ReDSM5 ($n = 194$), somatic excerpts scored above suicidality excerpts on the somatic axis (AUC 0.809–0.957), and suicidality excerpts above somatic excerpts on the suicidality axis (AUC 0.733–0.994; one-sided Mann–Whitney $U$, all $p < 10^{-7}$), in every model. Source shifts the level of the coefficients (ReDSM5 suicidality excerpts scored higher on the suicidality axis than book-sourced ones in every model), while the ordering held within each source in every model except one on *Darkness Visible*.
 
 ## Appendix C PERMANOVA and PERMDISP statistics at the gated peaks
 
