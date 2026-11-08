@@ -556,16 +556,7 @@ The black-box nature of large language models is a major barrier to clinical tru
 
 ## Limitations and Future Work
 
-Several limitations must be addressed prior to clinical application.
-
-1. The Symptom Vectors are built from a small reference corpus (51 Core Clinical excerpts, 8 for suicidality). We collapsed the nine DSM-5 symptoms into three groups for statistical power, which limits the symptom specificity of our analysis, and we did not test how stable the coefficients are when the reference corpus changes. Our evaluation tests only single-label group differences; it does not test detection of co-occurring symptoms or estimation of individual symptom severity.
-2. The operating layer is chosen by a heuristic rule. The PERMDISP gate has limited power to detect unequal dispersion in the small suicidality group, and the PERMANOVA $p$-values at the gated peaks are not corrected for selection across layers and metrics.
-3. Although every analysis was repeated in ten models, they span only three families and 4–32 billion parameters, with only Gemma-3 tested at more than one size, all evaluated on the same English corpora; whether the results extend to other architectures, larger scales, and other languages is untested.
-4. Preprocessing is a potential confound: every passage was rewritten into third-person prose by another large language model. Although the edits were minimal, reviewed by psychiatrist authors, and designed to preserve clinical content, this step may introduce bias.
-5. The Depression Vector was evaluated only by population-level separation; per-excerpt classification at a fixed threshold, and whether gating symptom projection on the Depression Score preserves clinician agreement, remain untested.
-6. Most importantly, agreement with clinician annotation is not equivalent to clinical validity: nothing reported here has been validated against diagnostic outcomes, treatment response, or longitudinal trajectories.
-
-Future research should address these limitations by granularizing Symptom Vectors using larger clinical corpora, extending the analysis to further model families, scales, and languages, evaluating the Depression Vector as a thresholded gate, and calibrating projections into an absolute and longitudinally stable severity scale suitable for patient monitoring.
+The Symptom Vectors are built from 51 reference excerpts (8 for suicidality), and the nine DSM-5 symptoms are collapsed into three groups; larger clinical corpora would allow per-symptom vectors and tests of co-occurring symptoms and severity. The operating layer is chosen by a heuristic, the PERMDISP gate has lower power in the small suicidality group, and PERMANOVA $p$-values at the gated peaks are not corrected for selection across layers and metrics. The ten models cover three families between 4B and 32B parameters, all tested on English text that another LLM rewrote into third-person prose. The Depression Vector was evaluated by population-level separation only; its use as a thresholded gate is untested. Finally, the projections have not been validated against diagnosis, treatment response, or longitudinal course, which clinical monitoring would require.
 
 ## Broader Impact Statement
 
