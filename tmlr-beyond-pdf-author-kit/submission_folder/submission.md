@@ -31,9 +31,9 @@ toc:
   - name: Broader Impact Statement
   - name: Reproducibility Statement
   - name: GenAI Usage Disclosure
-  - name: Appendix A Within-source clinician agreement
-  - name: Appendix B Core Clinical symptom descriptions
-  - name: Appendix C PERMANOVA and PERMDISP statistics at the gated peaks
+  - name: Appendix A Core Clinical symptom descriptions
+  - name: Appendix B PERMANOVA and PERMDISP statistics at the gated peaks
+  - name: Appendix C Within-source clinician agreement
 ---
 
 ## Abstract
@@ -92,7 +92,7 @@ A pilot experiment on the unedited Core Clinical corpus showed that PROCEED's re
 
 These rewrites were deliberately minimal, comprising surface-level edits only: standardizing pronouns, removing severity ratings from clinical questionnaires, correcting grammar in ReDSM5 and HappyDB, and restructuring fragments into continuous prose in PROCEED. Names and identifying details were also removed. Clinical content was left unchanged.
 
-The full set of rewritten excerpts in the Core Clinical corpus is provided in Appendix B. Table 2 shows representative examples of the rewriting from each corpus except ReDSM5, whose license prohibits reproducing posts.
+The full set of rewritten excerpts in the Core Clinical corpus is provided in Appendix A. Table 2 shows representative examples of the rewriting from each corpus except ReDSM5, whose license prohibits reproducing posts.
 
 <p style="text-align: center; margin-bottom: 0.3em;"><b>Table 2:</b> Text standardization examples. Original and standardized excerpts from each corpus except ReDSM5.</p>
 
@@ -113,7 +113,7 @@ Each excerpt was tokenized with the model's own tokenizer and processed in a sin
 <div id="model-picker" style="display: none; position: fixed; right: 16px; top: 16px; z-index: 1000; background: white; border: 1px solid #ccc; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); padding: 6px 10px; font: 13px Arial, sans-serif; color: black;"><label>Model <select id="model-select" style="font-size: 1em; padding: 2px 4px; max-width: 60vw;"></select></label></div>
 
 <style>
-/* Print / PDF: hide the floating selector and show every model's Table C1, since the archival PDF cannot switch models. */
+/* Print / PDF: hide the floating selector and show every model's Table B1, since the archival PDF cannot switch models. */
 @media print {
   #model-picker { display: none !important; }
   .model-views [data-model][hidden] { display: block !important; break-inside: avoid; margin-top: 1em; }
@@ -130,7 +130,8 @@ Each excerpt was tokenized with the model's own tokenizer and processed in a sin
   var picker = document.getElementById('model-picker'), select = document.getElementById('model-select');
   document.body.appendChild(picker);  // fixed to the viewport, clear of any transformed ancestor
   // Inline per-model tables (.model-views) follow the selector too: one [data-model] child shows.
-  var frames = Array.prototype.slice.call(document.querySelectorAll('.model-views'));
+  // They sit later in the page than this script, so they are looked up on each place() call.
+  var frames = [];
   function showInline(model) {
     document.querySelectorAll('.model-views [data-model]').forEach(function (v) {
       v.hidden = v.getAttribute('data-model') !== model;
@@ -139,7 +140,8 @@ Each excerpt was tokenized with the model's own tokenizer and processed in a sin
   function place() {
     var nav = document.getElementById('navbar');  // fixed-top or sticky-top in the TMLR layout
     picker.style.top = (nav ? Math.max(0, nav.getBoundingClientRect().bottom) : 0) + 12 + 'px';
-    var onScreen = frames.filter(function (f) {
+    var targets = frames.concat(Array.prototype.slice.call(document.querySelectorAll('.model-views')));
+    var onScreen = targets.filter(function (f) {
       var r = f.getBoundingClientRect();
       return r.bottom > 0 && r.top < window.innerHeight;
     });
@@ -240,7 +242,7 @@ A model's *operating layer* $\ell^\ast$ is the layer at which the largest number
 
 Every result below is reported for all ten models. The model-specific figures (Figures 2–4) show one model at a time; the floating Model selector at the upper right switches all of them to another model at once. Table 3 summarizes every model across experiments.
 
-For every model, we computed the PERMANOVA pseudo-$F$ and its PERMDISP $p$-value at every hook point for all eight distance-metric × normalization combinations. Each metric's gated peak, its maximum pseudo-$F$ within the eligible region, marks the layer where that metric separates the symptom groups most strongly (Figure 2; Appendix C). In all ten models, every metric had an eligible layer, and every gated peak was significant (PERMANOVA $p \le 0.0313$).
+For every model, we computed the PERMANOVA pseudo-$F$ and its PERMDISP $p$-value at every hook point for all eight distance-metric × normalization combinations. Each metric's gated peak, its maximum pseudo-$F$ within the eligible region, marks the layer where that metric separates the symptom groups most strongly (Figure 2; Appendix B). In all ten models, every metric had an eligible layer, and every gated peak was significant (PERMANOVA $p \le 0.0313$).
 
 <figure id="fig-separation" style="text-align: center; margin: 20px 0;">
   <iframe src="{{ 'assets/html/submission/82.multimodel_separation.html' | relative_url }}" width="100%" height="808" style="border: none;" title="Per-layer PERMANOVA pseudo-F for eight distance metrics"></iframe>
@@ -283,7 +285,7 @@ Figure 3 shows the coefficient distributions for each clinician-annotation group
 
 The projection agreed with the clinician annotations in every model. On the in-sample Core Clinical corpus, from which the Symptom Vectors were built, the excerpts carrying the matching annotation attained the highest median coefficient on each of the three axes in all ten models, an internal consistency check that Symptom Vectors separate the categories they were built from (Figure 3(a)–(c)).
 
-The same rank ordering was preserved on the held-out Naturalistic corpus, the true test of generalization: in all ten models, the matching annotation group again ranked first on every axis (Figure 3(d)). In both corpora and every model, each matching group exceeded each of the other two groups on its own axis (all corrected $p < 0.05$). On the held-out corpus, the matching group's median led the next-highest group's by 0.46–0.73 on the mood axis, 0.31–0.43 on the somatic axis, and 0.33–0.54 on the suicidality axis across models. Projecting held-out naturalistic narratives onto Symptom Vectors constructed from clinical instruments yields coefficients that agree with clinician annotation, in every model. Appendix A repeats this analysis within each Naturalistic source.
+The same rank ordering was preserved on the held-out Naturalistic corpus, the true test of generalization: in all ten models, the matching annotation group again ranked first on every axis (Figure 3(d)). In both corpora and every model, each matching group exceeded each of the other two groups on its own axis (all corrected $p < 0.05$). On the held-out corpus, the matching group's median led the next-highest group's by 0.46–0.73 on the mood axis, 0.31–0.43 on the somatic axis, and 0.33–0.54 on the suicidality axis across models. Projecting held-out naturalistic narratives onto Symptom Vectors constructed from clinical instruments yields coefficients that agree with clinician annotation, in every model. Appendix C repeats this analysis within each Naturalistic source.
 
 <figure id="fig-coefficients" style="text-align: center; margin: 20px 0;">
   <iframe src="{{ 'assets/html/submission/82.multimodel_coefficient_abc.html' | relative_url }}" width="100%" height="608" style="border: none;" title="Figure 3(a)–(c): per-axis coefficient distributions"></iframe>
@@ -383,9 +385,9 @@ Stronger separation did not translate into better downstream generalization: bot
 
 One challenge in treating depression is its clinical heterogeneity: patients sharing a diagnosis exhibit widely divergent symptom profiles. Yet, standard questionnaires often collapse this complexity into a single severity score <d-cite key="fried2015depression,chevance2020identifying"></d-cite>. Here, we show that when large language models process patient narratives, distinctive depression symptoms can be read directly from their residual streams. First, the models' representations of the three symptom groups (mood/emotional/cognitive, somatic, and suicidality) are geometrically separable, most clearly at an early layer: 20–34% of network depth in eight of the ten models, and 59% in the Gemma-3-4B pair. Second, projecting held-out naturalistic narratives onto the Symptom Vectors yields per-symptom coefficients that match the clinicians' category assignments in every model. Third, a Depression Vector separates held-out depressive from non-depressive text in every model; because the Symptom Vectors are built only from depressive text, it can serve as a gate that restricts symptom projection to depressive input.
 
-Our findings extend work showing that semantic categories, including sentiment, are encoded as approximately linear directions in LLM residual streams <d-cite key="park2025geometry,hollinsworth2024sentiment,dipalma2025llamas"></d-cite>. While prior work has characterized coarse valence, we map a symptom taxonomy drawn from six clinical instruments onto a model's internal representations and extract symptom signals along three axes. For any passage, this yields a symptom profile: whether it expresses mood, somatic, or suicidal content. Non-depressive passages are screened out first by a single cosine similarity with the Depression Vector.
+Our findings extend work showing that semantic categories, including sentiment, are encoded as approximately linear directions in LLM residual streams <d-cite key="park2025geometry,hollinsworth2024sentiment,dipalma2025llamas"></d-cite>. While prior work has characterized coarse valence, we map a symptom taxonomy drawn from six clinical instruments onto a model's internal representations and extract symptom signals along three axes. For any passage, this yields a symptom profile: whether it expresses mood, somatic, or suicidal content. Non-depressive passages can be screened out first by a single cosine similarity with the Depression Vector.
 
-The black-box nature of large language models is a major barrier to clinical trust and the translation of model-based tools into care. Our pipeline reads symptom signals from residual stream activations without inspecting generated output, so it could monitor a deployed model's conversations for signs of depression or suicidality. Finally, extracting symptom-group scores from naturalistic speech yields a quantitative signal that can be correlated with fMRI, resting EEG, or TMS-evoked potentials <d-cite key="parmigiani2023reliability"></d-cite>. This builds on approaches that mapped continuous behavioral markers to neural activity in naturalistic settings, such as decoding facial expressions for pain <d-cite key="huang2025naturalistic"></d-cite> and mood <d-cite key="kakusa2025distinct"></d-cite>. Applied to language, it can test whether the mood and somatic dimensions extracted by the LLM correspond to dissociable neural signatures, a step toward the symptom-specific targets of precision psychiatry <d-cite key="cline2026personalizing"></d-cite>. The same pipeline can serve as a template for extracting other clinical concepts from model activations.
+The black-box nature of large language models is a major barrier to clinical trust and the translation of model-based tools into care. We address this by mapping internal directions onto clinical symptom items, so a model's representation of a passage can be inspected symptom by symptom. Extracting symptom-group scores from naturalistic speech also yields a quantitative signal that can be correlated with fMRI, resting EEG, or TMS-evoked potentials <d-cite key="parmigiani2023reliability"></d-cite>. This builds on approaches that mapped continuous behavioral markers to neural activity in naturalistic settings, such as decoding facial expressions for pain <d-cite key="huang2025naturalistic"></d-cite> and mood <d-cite key="kakusa2025distinct"></d-cite>. Applied to language, it can test whether the mood and somatic dimensions extracted by the LLM correspond to dissociable neural signatures, a step toward the symptom-specific targets of precision psychiatry <d-cite key="cline2026personalizing"></d-cite>. Because the pipeline reads symptom signals from residual stream activations without inspecting generated output, it could also monitor a deployed model's conversations for signs of depression or suicidality. The same pipeline can serve as a template for extracting other clinical concepts from model activations.
 
 ## Limitations and Future Work
 
@@ -405,11 +407,7 @@ All analyses were performed in Python, and code to reproduce every figure and ta
 
 Anthropic Claude Opus 4 has been used to pre-process text samples. Figure 1 was created with Claude Design. Generative AI tools were employed for coding assistance. All AI-written code has been reviewed, tested, and verified by the authors. During the preparation of this manuscript, generative AI tools were employed for editing purposes, including proofreading, grammar correction, vocabulary improvement, and overall language polishing.
 
-## Appendix A Within-source clinician agreement
-
-Because ReDSM5 supplies most somatic and suicidality excerpts but no mood excerpts (Table 1), symptom group and source are associated in the Naturalistic corpus, so we repeated the analysis within each source. On the book-sourced excerpts alone ($n = 229$), each group had the highest median coefficient on its own axis in all ten models, as it did on the *Handbook* excerpts alone ($n = 172$); on *Darkness Visible* alone ($n = 57$), the ordering held in every model except Gemma-3-27B-PT, where only one of the three groups ranked first on its own axis. Within ReDSM5 ($n = 194$), somatic excerpts scored above suicidality excerpts on the somatic axis (AUC 0.809–0.957), and suicidality excerpts above somatic excerpts on the suicidality axis (AUC 0.733–0.994; one-sided Mann–Whitney $U$, all $p < 10^{-7}$), in every model. The two Gemma-3-27B models had the lowest suicidality-axis AUCs (0.737 pre-trained, 0.733 instruction-tuned), against 0.986–0.994 in the other eight. Source shifts the level of the coefficients (ReDSM5 suicidality excerpts scored higher on the suicidality axis than book-sourced ones in every model), while the ordering held within each source in every model except Gemma-3-27B-PT on *Darkness Visible*.
-
-## Appendix B Core Clinical symptom descriptions
+## Appendix A Core Clinical symptom descriptions
 
 Natural-language descriptions of depression symptoms, organized by clinical assessment instrument and grouped into three symptom dimensions (mood, somatic, and suicidality). Each entry corresponds to an item or item cluster from the source instrument.
 
@@ -512,12 +510,12 @@ Natural-language descriptions of depression symptoms, organized by clinical asse
 
 **Suicidality.** **Autoaggression symptoms.** The individual experiences thoughts related to their desire to continue living. They report suicidal ideation and engage in self-harming behaviors. They have attempted suicide.
 
-## Appendix C PERMANOVA and PERMDISP statistics at the gated peaks
+## Appendix B PERMANOVA and PERMDISP statistics at the gated peaks
 
 The centroid metrics peaked at the operating layer more often than Earth Mover's and Energy Distance did (25 of their 40 gated peaks, against 11 of 40). Gated peaks at other layers also sat closer to the dispersion threshold, with PERMDISP $p$ below 0.10 for 52% of them against 31% at the operating layer.
 
 <figure id="tab-permanova" style="text-align: center; margin: 20px 0;">
-  <p style="margin-bottom: 0.3em;"><b>Table C1:</b> PERMANOVA and PERMDISP statistics at each metric's gated peak, with <i>p</i>-values beneath each statistic (9,999 permutations; 0.0001 is the smallest attainable <i>p</i>).</p>
+  <p style="margin-bottom: 0.3em;"><b>Table B1:</b> PERMANOVA and PERMDISP statistics at each metric's gated peak, with <i>p</i>-values beneath each statistic (9,999 permutations; 0.0001 is the smallest attainable <i>p</i>).</p>
 <div class="model-views" style="overflow-x: auto;">
 <div data-model="Gemma-3-27B-PT">
 <p style="margin: 0 0 0.3em; font-size: 0.9em; color: #555;">Model: Gemma-3-27B-PT · L21</p>
@@ -681,3 +679,7 @@ The centroid metrics peaked at the operating layer more often than Earth Mover's
 </div>
 </div>
 </figure>
+
+## Appendix C Within-source clinician agreement
+
+Because ReDSM5 supplies most somatic and suicidality excerpts but no mood excerpts (Table 1), symptom group and source are associated in the Naturalistic corpus, so we repeated the analysis within each source. On the book-sourced excerpts alone ($n = 229$), each group had the highest median coefficient on its own axis in all ten models, as it did on the *Handbook* excerpts alone ($n = 172$); on *Darkness Visible* alone ($n = 57$), the ordering held in every model except Gemma-3-27B-PT, where only one of the three groups ranked first on its own axis. Within ReDSM5 ($n = 194$), somatic excerpts scored above suicidality excerpts on the somatic axis (AUC 0.809–0.957), and suicidality excerpts above somatic excerpts on the suicidality axis (AUC 0.733–0.994; one-sided Mann–Whitney $U$, all $p < 10^{-7}$), in every model. The two Gemma-3-27B models had the lowest suicidality-axis AUCs (0.737 pre-trained, 0.733 instruction-tuned), against 0.986–0.994 in the other eight. Source shifts the level of the coefficients (ReDSM5 suicidality excerpts scored higher on the suicidality axis than book-sourced ones in every model), while the ordering held within each source in every model except Gemma-3-27B-PT on *Darkness Visible*.
