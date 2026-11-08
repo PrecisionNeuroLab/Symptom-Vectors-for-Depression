@@ -1,7 +1,7 @@
 import numpy as np
 import torch.nn.functional as f
 from pandas import DataFrame
-from torch import Tensor, topk
+from torch import Tensor, linalg, topk
 from torch import cdist
 from transformers import AutoModelForCausalLM
 
@@ -53,6 +53,11 @@ def centroid(emb: Tensor):
 
 def magnitude(emb: Tensor):
     return emb.norm().item()
+
+
+def gram_condition_number(vectors: Tensor):
+    """Condition number of the Gram matrix G = V V^T of the row vectors V (lambda_max / lambda_min)."""
+    return linalg.cond(vectors @ vectors.T).item()
 
 
 def jaccard_distance(set1, set2):

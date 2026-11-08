@@ -128,6 +128,21 @@ class TestMagnitude(unittest.TestCase):
         self.assertAlmostEqual(result, expected)
 
 
+class TestGramConditionNumber(unittest.TestCase):
+    def test_gram_condition_number_orthonormal(self):
+        vectors = torch.eye(3, 5, dtype=torch.float64)
+        self.assertAlmostEqual(gram_condition_number(vectors), 1.0)
+
+    def test_gram_condition_number_scaled(self):
+        # orthogonal rows with norms 1 and 3: G = diag(1, 9)
+        vectors = torch.tensor([[1.0, 0.0, 0.0], [0.0, 3.0, 0.0]], dtype=torch.float64)
+        self.assertAlmostEqual(gram_condition_number(vectors), 9.0)
+
+    def test_gram_condition_number_near_parallel(self):
+        vectors = torch.tensor([[1.0, 0.0], [1.0, 1e-3]], dtype=torch.float64)
+        self.assertGreater(gram_condition_number(vectors), 1e6)
+
+
 class TestJaccardDistance(unittest.TestCase):
     def test_identical_sets(self):
         set1 = {1, 2, 3}
