@@ -11,6 +11,7 @@ that copy in place:
     with the authors, affiliations, repository URL, and end matter of the npj preprint
   - the navbar reads Precision Neurotherapeutics Lab instead of TMLR Beyond PDF (_preprint.yml),
     and the tab shows the lab favicon (preprint_assets/lab-favicon.png, from precisionneuro.stanford.edu)
+  - the navbar takes the lab website's red background and white text, at the same height
   - the citation box cites a preprint, and the byline lists every affiliation of an author
   - the byline drops Distill's "Submitted: Not submitted yet." column, and the authors and
     affiliations take its width
@@ -34,13 +35,21 @@ MIRECC = ('Sierra Pacific Mental Illness, Research, Education, and Clinical Cent
           'Veterans Affairs Palo Alto Healthcare System')
 INDEPENDENT = 'Independent Researcher, Seattle, WA'
 
-# Page CSS (the distill layout's _styles). On wide screens the byline is four columns: authors and
-# affiliations span two, "Submitted" one, and one is empty. Drop "Submitted"; give affiliations 3/4.
-BYLINE_CSS = '''\
-d-byline .byline > div:not(.authors-affiliations) { display: none; }
-@media (min-width: 768px) {
-  d-byline .byline .authors-affiliations { grid-column: 1 / -1; grid-template-columns: 1fr 3fr; }
-}
+# Page CSS (the distill layout's _styles).
+# Navbar: the lab website's header colors (precisionneuro.stanford.edu: accent hsl(1.94, 38.59%,
+# 47.25%) with off-white text). Only colors change, the 1px border included, so the navbar keeps
+# its height and the figures' Model picker still docks below it.
+# Byline: on wide screens it is four columns: authors and affiliations span two, "Submitted" one,
+# and one is empty. Drop "Submitted"; give affiliations 3/4.
+LAB_RED, LAB_WHITE = '#a74d4a', '#f5f5f5'
+PAGE_CSS = f'''\
+#navbar.navbar {{ background-color: {LAB_RED}; border-bottom-color: {LAB_RED}; }}
+#navbar .navbar-brand, #navbar .navbar-brand:hover {{ color: {LAB_WHITE}; }}
+#navbar .navbar-toggler .icon-bar {{ background-color: {LAB_WHITE}; }}
+d-byline .byline > div:not(.authors-affiliations) {{ display: none; }}
+@media (min-width: 768px) {{
+  d-byline .byline .authors-affiliations {{ grid-column: 1 / -1; grid-template-columns: 1fr 3fr; }}
+}}
 '''
 AUTHORS = [
     ('Fangyi Zhu', [STANFORD_PSY, WU_TSAI]),
@@ -88,7 +97,7 @@ def authors_yaml():
 
 
 def styles_yaml():
-    return '_styles: |\n' + ''.join(f'  {line}\n' for line in BYLINE_CSS.splitlines())
+    return '_styles: |\n' + ''.join(f'  {line}\n' for line in PAGE_CSS.splitlines())
 
 
 def replace_once(text, old, new, where):
