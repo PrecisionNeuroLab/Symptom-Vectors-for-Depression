@@ -11,7 +11,8 @@ that copy in place:
     with the authors, affiliations, repository URL, and end matter of the npj preprint
   - the navbar reads Precision Neurotherapeutics Lab instead of TMLR Beyond PDF (_preprint.yml),
     and the tab shows the lab favicon (preprint_assets/lab-favicon.png, from precisionneuro.stanford.edu)
-  - the navbar takes the lab website's red background and white text, at the same height
+  - the navbar takes the lab website's red background and logo (preprint_assets/stanford-logo-white.png),
+    at the same height, and scrolls away with the page instead of staying pinned
   - the citation box cites a preprint, and the byline lists every affiliation of an author
   - the byline drops Distill's "Submitted: Not submitted yet." column, and the authors and
     affiliations take its width
@@ -26,7 +27,10 @@ import sys
 
 LAB = 'Precision Neurotherapeutics Lab'
 REPO = 'https://github.com/PrecisionNeuroLab/Symptom-Vectors-for-Depression'
-FAVICON = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprint_assets', 'lab-favicon.png')
+ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprint_assets')
+FAVICON = os.path.join(ASSETS, 'lab-favicon.png')
+LOGO = os.path.join(ASSETS, 'stanford-logo-white.png')  # the lab website's header logo
+LOGO_URL = '/assets/lab/stanford-logo-white.png'  # outside assets/img/, which jekyll-imagemagick resizes
 
 # Authors and affiliations as in the npj manuscript (nature_preprint.tex).
 STANFORD_PSY = 'Department of Psychiatry & Behavioral Sciences, Stanford University School of Medicine'
@@ -39,12 +43,18 @@ INDEPENDENT = 'Independent Researcher, Seattle, WA'
 # Navbar: the lab website's header colors (precisionneuro.stanford.edu: accent hsl(1.94, 38.59%,
 # 47.25%) with off-white text). Only colors change, the 1px border included, so the navbar keeps
 # its height and the figures' Model picker still docks below it. The template's main.css sets the
-# navbar background and border with !important, so these must too.
+# navbar background and border with !important, so these must too. The brand is the lab website's
+# header logo, at the 1.875rem line box of the text title it replaces (1.25rem x line-height 1.5).
+# The navbar scrolls away with the page instead of staying fixed: absolute at the top keeps the
+# body's fixed-top-nav padding correct, and the Model picker docks at max(0, navbar bottom).
 # Byline: on wide screens it is four columns: authors and affiliations span two, "Submitted" one,
 # and one is empty. Drop "Submitted"; give affiliations 3/4.
 LAB_RED, LAB_WHITE = '#a74d4a', '#f5f5f5'
 PAGE_CSS = f'''\
 #navbar.navbar {{ background-color: {LAB_RED} !important; border-bottom-color: {LAB_RED} !important; }}
+#navbar.navbar.fixed-top {{ position: absolute; }}
+#navbar .lab-logo {{ display: block; height: 1.875rem; width: auto; max-width: calc(100vw - 7rem);
+  object-fit: contain; object-position: left; }}
 #navbar .navbar-brand, #navbar .navbar-brand:hover {{ color: {LAB_WHITE} !important; }}
 #navbar .navbar-toggler .icon-bar {{ background-color: {LAB_WHITE} !important; }}
 d-byline .byline > div:not(.authors-affiliations) {{ display: none; }}
@@ -146,6 +156,13 @@ def layout(src):
           ]""", 'distill.html')
 
 
+def header(src):
+    # The navbar brand shows the lab logo instead of the site title (kept as its alt text).
+    return replace_once(src, '{{- site.title -}}',
+                        f'<img class="lab-logo" src="{{{{ \'{LOGO_URL}\' | relative_url }}}}" alt="{{{{ site.title }}}}">',
+                        'header.html')
+
+
 def rewrite(path, fn):
     with open(path, encoding='utf-8') as f:
         text = fn(f.read())
@@ -162,7 +179,10 @@ def main(site):
     shutil.rmtree(os.path.join(site, '_under_review'))
     os.remove(os.path.join(site, 'index.md'))
     rewrite(os.path.join(site, '_layouts', 'distill.html'), layout)
+    rewrite(os.path.join(site, '_includes', 'header.html'), header)
     shutil.copyfile(FAVICON, os.path.join(site, 'assets', 'img', 'lab-favicon.png'))
+    os.makedirs(os.path.join(site, 'assets', 'lab'), exist_ok=True)
+    shutil.copyfile(LOGO, os.path.join(site, LOGO_URL.lstrip('/')))
     with open(os.path.join(site, '_preprint.yml'), 'w', encoding='utf-8') as f:
         f.write(f'title: {LAB}\n'
                 'icon: lab-favicon.png\n'
