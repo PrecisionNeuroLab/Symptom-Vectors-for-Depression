@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'tmlr-beyond-pdf-author-kit/**'
+      - 'make_review_page.py'
+      - '.github/actions/build-site/**'
       - '.github/workflows/tmlr-pages.yml'
   workflow_dispatch:
 
@@ -32,7 +34,7 @@ jobs:
           python-version: '3.12'
 
       # The online-editor import (compile_submission.py, submission_folder/, tmlr_do_not_modify/).
-      # Built first, while tmlr_do_not_modify/ is still pristine: later steps add _under_review/,
+      # Built first, while tmlr_do_not_modify/ is still pristine: the site build adds _under_review/,
       # merged assets, vendor/ and _site/ there.
       - name: Zip editor import
         working-directory: .
@@ -49,41 +51,8 @@ jobs:
         working-directory: .
         run: python -I check_figure_text.py --all
 
-      # Same merge step as compile_submission.py, minus the Docker server at the end.
-      - name: Merge submission into site template
-        run: |
-          mkdir -p tmlr_do_not_modify/_under_review
-          sed '/^start_jekyll_server()/d' compile_submission.py > "$RUNNER_TEMP/merge.py"
-          python "$RUNNER_TEMP/merge.py"
-
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y imagemagick
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1'
-          bundler-cache: true
-          working-directory: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify
-
-      - id: pages
-        uses: actions/configure-pages@v5
-
-      - name: Build site
-        working-directory: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify
-        env:
-          JEKYLL_ENV: production
-          PAGES_REPO_NWO: ${{ github.repository }}
-          JEKYLL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          printf 'url: "%s"\nbaseurl: "%s"\n' \
-            "${{ steps.pages.outputs.origin }}" "${{ steps.pages.outputs.base_path }}" > "$RUNNER_TEMP/pages.yml"
-          bundle exec jekyll build --future --config "_config.yml,$RUNNER_TEMP/pages.yml"
-
-      - name: Build coauthor review page (figures and tables only)
-        working-directory: .
-        run: |
-          mkdir -p tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site/review
-          python make_review_page.py tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site/review/index.html
+      # Anonymous paper, review page, and preprint: see the action for why it builds all three.
+      - uses: ./.github/actions/build-site
 
       # The OpenReview upload: built from this exact commit, only after the site built cleanly.
       - name: Zip submission folder
@@ -94,10 +63,6 @@ jobs:
           name: submission_folder-${{ github.sha }}
           path: tmlr-beyond-pdf-author-kit/submission_folder.zip
           retention-days: 90
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site
 
   deploy:
     needs: build

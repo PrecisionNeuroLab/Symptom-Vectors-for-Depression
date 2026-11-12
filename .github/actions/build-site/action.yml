@@ -1,0 +1,76 @@
+name: Build Pages site
+description: >
+  Build the whole GitHub Pages site and upload it as the Pages artifact: the anonymous TMLR paper
+  (/under_review/submission/), the coauthor review page (/review/), and the de-anonymized preprint
+  (/preprint/). A Pages deploy replaces the entire site, so every workflow that deploys builds all
+  three; otherwise a deploy from one workflow would delete the pages of the other.
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    # Same merge step as compile_submission.py, minus the Docker server at the end.
+    - name: Merge submission into site template
+      shell: bash
+      working-directory: tmlr-beyond-pdf-author-kit
+      run: |
+        mkdir -p tmlr_do_not_modify/_under_review
+        sed '/^start_jekyll_server()/d' compile_submission.py > "$RUNNER_TEMP/merge.py"
+        python "$RUNNER_TEMP/merge.py"
+
+    - name: Install ImageMagick
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1'
+        bundler-cache: true
+        working-directory: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify
+
+    - id: pages
+      uses: actions/configure-pages@v5
+
+    - name: Build TMLR site
+      shell: bash
+      working-directory: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify
+      env:
+        JEKYLL_ENV: production
+        PAGES_REPO_NWO: ${{ github.repository }}
+        JEKYLL_GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        printf 'url: "%s"\nbaseurl: "%s"\n' \
+          "${{ steps.pages.outputs.origin }}" "${{ steps.pages.outputs.base_path }}" > "$RUNNER_TEMP/pages.yml"
+        bundle exec jekyll build --future --config "_config.yml,$RUNNER_TEMP/pages.yml"
+
+    - name: Build coauthor review page (figures and tables only)
+      shell: bash
+      run: |
+        mkdir -p tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site/review
+        python make_review_page.py tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site/review/index.html
+
+    # The preprint is built from a copy of the merged template, so tmlr_do_not_modify/ and the
+    # anonymous site stay as TMLR expects. make_preprint.py derives it from submission.md.
+    - name: Build de-anonymized preprint
+      shell: bash
+      working-directory: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify
+      env:
+        JEKYLL_ENV: production
+        PAGES_REPO_NWO: ${{ github.repository }}
+        JEKYLL_GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        SRC="$RUNNER_TEMP/preprint-src"
+        rsync -a --exclude _site --exclude vendor --exclude .bundle --exclude .jekyll-cache ./ "$SRC/"
+        python -I "$GITHUB_WORKSPACE/make_preprint.py" "$SRC"
+        printf 'url: "%s"\nbaseurl: "%s/preprint"\n' \
+          "${{ steps.pages.outputs.origin }}" "${{ steps.pages.outputs.base_path }}" > "$RUNNER_TEMP/preprint-pages.yml"
+        mkdir -p _site/preprint  # jekyll-imagemagick does not create missing parent folders
+        bundle exec jekyll build --future --source "$SRC" --destination _site/preprint \
+          --config "$SRC/_config.yml,$SRC/_preprint.yml,$RUNNER_TEMP/preprint-pages.yml"
+
+    - uses: actions/upload-pages-artifact@v3
+      with:
+        path: tmlr-beyond-pdf-author-kit/tmlr_do_not_modify/_site

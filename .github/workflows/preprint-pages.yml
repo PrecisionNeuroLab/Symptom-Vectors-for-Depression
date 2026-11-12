@@ -1,0 +1,49 @@
+name: Deploy preprint to GitHub Pages
+
+# The de-anonymized interactive preprint, served at <pages url>/preprint/.
+# make_preprint.py derives it from the anonymous submission.md at build time, so edits to the
+# paper go in submission.md and redeploy through tmlr-pages.yml, which builds the preprint too.
+# This workflow covers changes to the preprint alone (authors, end matter, lab header).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'make_preprint.py'
+      - '.github/workflows/preprint-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Shared with tmlr-pages.yml: both deploy the same Pages site.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check figure text is public
+        run: python -I check_figure_text.py --all
+
+      - uses: ./.github/actions/build-site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}preprint/
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
