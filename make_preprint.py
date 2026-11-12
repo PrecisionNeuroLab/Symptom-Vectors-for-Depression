@@ -9,7 +9,8 @@ that copy in place:
 
   - the paper becomes preprint.md, served at the site root (the workflow puts it at /preprint/),
     with the authors, affiliations, repository URL, and end matter of the npj preprint
-  - the navbar reads Precision Neurotherapeutics Lab instead of TMLR Beyond PDF (_preprint.yml)
+  - the navbar reads Precision Neurotherapeutics Lab instead of TMLR Beyond PDF (_preprint.yml),
+    and the tab shows the lab favicon (preprint_assets/lab-favicon.png, from precisionneuro.stanford.edu)
   - the citation box cites a preprint, and the byline lists every affiliation of an author
 
 submission.md stays anonymous and is the only copy of the paper text: edit it, never the output.
@@ -22,6 +23,7 @@ import sys
 
 LAB = 'Precision Neurotherapeutics Lab'
 REPO = 'https://github.com/PrecisionNeuroLab/Symptom-Vectors-for-Depression'
+FAVICON = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprint_assets', 'lab-favicon.png')
 
 # Authors and affiliations as in the npj manuscript (nature_preprint.tex).
 STANFORD_PSY = 'Department of Psychiatry & Behavioral Sciences, Stanford University School of Medicine'
@@ -135,8 +137,10 @@ def main(site):
     shutil.rmtree(os.path.join(site, '_under_review'))
     os.remove(os.path.join(site, 'index.md'))
     rewrite(os.path.join(site, '_layouts', 'distill.html'), layout)
+    shutil.copyfile(FAVICON, os.path.join(site, 'assets', 'img', 'lab-favicon.png'))
     with open(os.path.join(site, '_preprint.yml'), 'w', encoding='utf-8') as f:
         f.write(f'title: {LAB}\n'
+                'icon: lab-favicon.png\n'
                 'description: Interpretable Symptom Vectors for Depression in Large Language Models\n')
     print(f'make_preprint: wrote {site}/preprint.md')
 

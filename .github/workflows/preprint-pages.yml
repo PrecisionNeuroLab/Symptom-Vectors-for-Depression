@@ -10,6 +10,7 @@ on:
     branches: [main]
     paths:
       - 'make_preprint.py'
+      - 'preprint_assets/**'
       - '.github/workflows/preprint-pages.yml'
   workflow_dispatch:
 

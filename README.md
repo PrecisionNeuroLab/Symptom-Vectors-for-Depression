@@ -1,4 +1,4 @@
-Interactive prerpint: https://precisionneurolab.github.io/Symptom-Vectors-for-Depression/under_review/submission/
+Interactive preprint: https://precisionneurolab.github.io/Symptom-Vectors-for-Depression/preprint/
 
 # Code
 
