@@ -12,6 +12,8 @@ that copy in place:
   - the navbar reads Precision Neurotherapeutics Lab instead of TMLR Beyond PDF (_preprint.yml),
     and the tab shows the lab favicon (preprint_assets/lab-favicon.png, from precisionneuro.stanford.edu)
   - the citation box cites a preprint, and the byline lists every affiliation of an author
+  - the byline drops Distill's "Submitted: Not submitted yet." column, and the authors and
+    affiliations take its width
 
 submission.md stays anonymous and is the only copy of the paper text: edit it, never the output.
 Every replacement must match exactly once, so a reworded source fails the build instead of
@@ -31,6 +33,15 @@ WU_TSAI = 'Wu Tsai Neurosciences Institute, Stanford University'
 MIRECC = ('Sierra Pacific Mental Illness, Research, Education, and Clinical Center (MIRECC), '
           'Veterans Affairs Palo Alto Healthcare System')
 INDEPENDENT = 'Independent Researcher, Seattle, WA'
+
+# Page CSS (the distill layout's _styles). On wide screens the byline is four columns: authors and
+# affiliations span two, "Submitted" one, and one is empty. Drop "Submitted"; give affiliations 3/4.
+BYLINE_CSS = '''\
+d-byline .byline > div:not(.authors-affiliations) { display: none; }
+@media (min-width: 768px) {
+  d-byline .byline .authors-affiliations { grid-column: 1 / -1; grid-template-columns: 1fr 3fr; }
+}
+'''
 AUTHORS = [
     ('Fangyi Zhu', [STANFORD_PSY, WU_TSAI]),
     ('Ajay Subramanian', [STANFORD_PSY, WU_TSAI]),
@@ -76,6 +87,10 @@ def authors_yaml():
     return '\n'.join(out) + '\n'
 
 
+def styles_yaml():
+    return '_styles: |\n' + ''.join(f'  {line}\n' for line in BYLINE_CSS.splitlines())
+
+
 def replace_once(text, old, new, where):
     n = text.count(old)
     if n != 1:
@@ -85,7 +100,7 @@ def replace_once(text, old, new, where):
 
 def paper(src):
     p = replace_once(src, '# Anonymized for review\nauthors:\n  - name: Anonymous\n    affiliations:\n'
-                          '      name: Anonymous\n', authors_yaml() + 'permalink: /index.html\n', 'front matter')
+                          '      name: Anonymous\n', authors_yaml() + 'permalink: /index.html\n' + styles_yaml(), 'front matter')
     p = replace_once(p, '  - name: GenAI Usage Disclosure\n',
                      '  - name: GenAI Usage Disclosure\n' + END_MATTER_TOC, 'toc')
     p = replace_once(p, 'is provided in an anonymized repository for review: [ANONYMIZED REPOSITORY URL].',
