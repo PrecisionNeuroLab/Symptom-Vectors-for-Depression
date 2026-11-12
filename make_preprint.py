@@ -38,14 +38,15 @@ INDEPENDENT = 'Independent Researcher, Seattle, WA'
 # Page CSS (the distill layout's _styles).
 # Navbar: the lab website's header colors (precisionneuro.stanford.edu: accent hsl(1.94, 38.59%,
 # 47.25%) with off-white text). Only colors change, the 1px border included, so the navbar keeps
-# its height and the figures' Model picker still docks below it.
+# its height and the figures' Model picker still docks below it. The template's main.css sets the
+# navbar background and border with !important, so these must too.
 # Byline: on wide screens it is four columns: authors and affiliations span two, "Submitted" one,
 # and one is empty. Drop "Submitted"; give affiliations 3/4.
 LAB_RED, LAB_WHITE = '#a74d4a', '#f5f5f5'
 PAGE_CSS = f'''\
-#navbar.navbar {{ background-color: {LAB_RED}; border-bottom-color: {LAB_RED}; }}
-#navbar .navbar-brand, #navbar .navbar-brand:hover {{ color: {LAB_WHITE}; }}
-#navbar .navbar-toggler .icon-bar {{ background-color: {LAB_WHITE}; }}
+#navbar.navbar {{ background-color: {LAB_RED} !important; border-bottom-color: {LAB_RED} !important; }}
+#navbar .navbar-brand, #navbar .navbar-brand:hover {{ color: {LAB_WHITE} !important; }}
+#navbar .navbar-toggler .icon-bar {{ background-color: {LAB_WHITE} !important; }}
 d-byline .byline > div:not(.authors-affiliations) {{ display: none; }}
 @media (min-width: 768px) {{
   d-byline .byline .authors-affiliations {{ grid-column: 1 / -1; grid-template-columns: 1fr 3fr; }}
