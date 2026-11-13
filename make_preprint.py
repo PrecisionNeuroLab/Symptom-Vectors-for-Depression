@@ -14,6 +14,8 @@ that copy in place:
   - the navbar takes the lab website's red background and logo (preprint_assets/stanford-logo-white.png),
     at the same height, and the logo links to the lab website, and scrolls away with the page instead of staying pinned
   - the citation box cites a preprint, and the byline lists every affiliation of an author
+  - the author note is set small, and the Contents sidebar spans enough rows that the rows beside it
+    do not stretch and open gaps before the Abstract
   - the byline drops Distill's "Submitted: Not submitted yet." column, and the authors and
     affiliations take its width
 
@@ -48,6 +50,10 @@ INDEPENDENT = 'Independent Researcher, Seattle, WA'
 # header logo, at the 1.875rem line box of the text title it replaces (1.25rem x line-height 1.5).
 # The navbar scrolls away with the page instead of staying fixed: absolute at the top keeps the
 # body's fixed-top-nav padding correct, and the Model picker docks at max(0, navbar bottom).
+# Author note: the size of the byline text, so it stays two lines at most on wide screens.
+# Contents: on wide screens the sidebar spans four grid rows (_distill.scss), and the rows beside
+# it (author note, Abstract heading, ...) stretch to its height, leaving gaps before the Abstract.
+# Spanning twelve rows gives the sidebar enough text beside it that no row stretches.
 # Byline: on wide screens it is four columns: authors and affiliations span two, "Submitted" one,
 # and one is empty. Drop "Submitted"; give affiliations 3/4.
 LAB_RED, LAB_WHITE = '#a74d4a', '#f5f5f5'
@@ -59,6 +65,10 @@ PAGE_CSS = f'''\
 #navbar .navbar-brand, #navbar .navbar-brand:hover {{ color: {LAB_WHITE} !important; }}
 #navbar .navbar-toggler .icon-bar {{ background-color: {LAB_WHITE} !important; }}
 d-byline .byline > div:not(.authors-affiliations) {{ display: none; }}
+d-article p.author-note {{ font-size: 0.8em; line-height: 1.6; margin-bottom: 0; }}
+@media (min-width: 1025px) {{
+  d-article d-contents {{ grid-row: auto / span 12; }}
+}}
 @media (min-width: 768px) {{
   d-byline .byline .authors-affiliations {{ grid-column: 1 / -1; grid-template-columns: 1fr 3fr; }}
 }}
@@ -72,7 +82,7 @@ AUTHORS = [
     ('Corey J. Keller', [STANFORD_PSY, WU_TSAI, MIRECC]),
 ]
 
-AUTHOR_NOTE = ('<p><i>Fangyi Zhu and Ajay Subramanian contributed equally to this work. '
+AUTHOR_NOTE = ('<p class="author-note"><i>Fangyi Zhu and Ajay Subramanian contributed equally to this work. '
                'Correspondence: Fangyi Zhu, '
                '<a href="mailto:contact@fangyizhu.com">contact@fangyizhu.com</a>. '
                'Short URL for this preprint: '
