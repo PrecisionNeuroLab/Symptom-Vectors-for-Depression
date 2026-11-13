@@ -12,7 +12,7 @@ that copy in place:
   - the navbar reads Precision Neurotherapeutics Lab instead of TMLR Beyond PDF (_preprint.yml),
     and the tab shows the lab favicon (preprint_assets/lab-favicon.png, from precisionneuro.stanford.edu)
   - the navbar takes the lab website's red background and logo (preprint_assets/stanford-logo-white.png),
-    at the same height, and scrolls away with the page instead of staying pinned
+    at the same height, and the logo links to the lab website, and scrolls away with the page instead of staying pinned
   - the citation box cites a preprint, and the byline lists every affiliation of an author
   - the byline drops Distill's "Submitted: Not submitted yet." column, and the authors and
     affiliations take its width
@@ -27,6 +27,7 @@ import sys
 
 LAB = 'Precision Neurotherapeutics Lab'
 REPO = 'https://github.com/PrecisionNeuroLab/Symptom-Vectors-for-Depression'
+LAB_URL = 'https://precisionneuro.stanford.edu/'
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'preprint_assets')
 FAVICON = os.path.join(ASSETS, 'lab-favicon.png')
 LOGO = os.path.join(ASSETS, 'stanford-logo-white.png')  # the lab website's header logo
@@ -157,8 +158,11 @@ def layout(src):
 
 
 def header(src):
-    # The navbar brand shows the lab logo instead of the site title (kept as its alt text).
-    return replace_once(src, '{{- site.title -}}',
+    # The navbar brand shows the lab logo instead of the site title (kept as its alt text),
+    # and links to the lab website instead of the preprint itself.
+    h = replace_once(src, '<a class="navbar-brand title font-weight-lighter" href="{{ site.baseurl }}/">',
+                     f'<a class="navbar-brand title font-weight-lighter" href="{LAB_URL}">', 'header.html')
+    return replace_once(h, '{{- site.title -}}',
                         f'<img class="lab-logo" src="{{{{ \'{LOGO_URL}\' | relative_url }}}}" alt="{{{{ site.title }}}}">',
                         'header.html')
 
