@@ -74,7 +74,9 @@ AUTHORS = [
 
 AUTHOR_NOTE = ('<p><i>Fangyi Zhu and Ajay Subramanian contributed equally to this work. '
                'Correspondence: Fangyi Zhu, '
-               '<a href="mailto:contact@fangyizhu.com">contact@fangyizhu.com</a>.</i></p>\n\n')
+               '<a href="mailto:contact@fangyizhu.com">contact@fangyizhu.com</a>. '
+               'Short URL for this preprint: '
+               '<a href="http://fangyizhu.com/vector-paper">http://fangyizhu.com/vector-paper</a></i></p>\n\n')
 
 # Declarations from the npj manuscript, withheld from the anonymous submission.
 END_MATTER = """\
